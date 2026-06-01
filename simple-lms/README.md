@@ -168,6 +168,11 @@ For **products, memberships/restricted content, customer accounts & registration
 custom objects/fields, and Flows**, search the support site — those are standard
 StoreConnect/Salesforce setup topics rather than anything specific to this kit.
 
+**Migrating an existing course/site?** Use StoreConnect's **Route Mapping** to bring
+high-performing or well-known URLs over seamlessly — point a familiar URL at your course
+index, keep old links working, and preserve SEO. Mappings are also added automatically as
+resources move (e.g. a slug change). Search "Route Mapping" on the support site.
+
 ## Troubleshooting
 
 - **"I marked complete but the page didn't change."** The Sync flow isn't active —

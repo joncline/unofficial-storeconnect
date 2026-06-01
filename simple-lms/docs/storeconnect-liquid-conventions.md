@@ -58,6 +58,11 @@ This is what lets the LMS address a lesson slot by building the key as a string:
 - There is **no server-side redirect tag** in SC Liquid. After a write that used
   `?param=…`, strip the query string client-side:
   `history.replaceState({}, '', location.pathname)` (the dashboard snippet does this).
+- For **real URL redirects/migration**, use StoreConnect's **Route Mapping** feature
+  (not Liquid): it maps existing/known/high-traffic URLs to StoreConnect resources so
+  they keep resolving (preserving SEO + bookmarks), and route mappings are added
+  automatically as resources move (e.g. a slug change). Handy for pointing a
+  well-known URL at your course index. Search "Route Mapping" on support.storeconnect.com.
 - **Account routes: plural vs singular.** Use **`/accounts/register`** (plural) to
   register a *new* account; use **`/account/...`** (singular) for an existing/known
   account — e.g. `/account/sign_in` and the `/account` private portal area.
