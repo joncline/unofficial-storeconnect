@@ -58,10 +58,14 @@ separately via the progress object.)
 
 If you'd rather capture responses — to report on comprehension, trigger follow-up, gate
 on a passing score, etc. — swap (or supplement) the self-scored quiz with a **StoreConnect
-Custom Form / Form Submission**, which writes submitted data into Salesforce where you can
-use Flows, reports, and the rest of the platform. See the
-[CustomForm Liquid object reference](https://support.storeconnect.com/article/custom-form-liquid-object-reference)
-and search "Custom Forms" / "Form Submissions" (and web-to-lead/web-to-case) on
-[support.storeconnect.com](https://support.storeconnect.com). That's a deliberate
-trade-off: client-side quiz = zero friction / zero data; Form Submission = captured data
-for richer follow-up.
+Custom Form**, whose submissions write into Salesforce where you can use Flows, reports,
+and the rest of the platform. References:
+
+- [Custom forms](https://support.storeconnect.com/articles/custom-forms) — setup, with the Generic / Checkout / Product form types
+- [Generic forms](https://support.storeconnect.com/articles/generic-forms) — the form type to use for a standalone quiz/knowledge-check anywhere on the site
+- [CustomForm Liquid object reference](https://support.storeconnect.com/article/custom-form-liquid-object-reference) — rendering a form in your theme
+- [FormSubmission object reference](https://support.storeconnect.com/articles/form-submission-object-reference) — the submitted-data record in Salesforce
+- [FormSubmission controller reference](https://support.storeconnect.com/articles/form-submission-controller-reference) — handling the submission server-side
+
+That's a deliberate trade-off: client-side quiz = zero friction / zero data; a Custom Form
+submission = captured data in Salesforce for richer follow-up.
