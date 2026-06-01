@@ -26,7 +26,9 @@ your own hosted video.
   keyboard nav, deep-linking (`?step=`), and scroll-to-top on advance.
 - 🎥 **Hosted video** embedded per lesson (Vimeo/YouTube/your CDN).
 - ✅ **Self-scored quizzes** authored in plain Markdown (`- [x]` = answer key), scored
-  client-side; the **Mark as Complete** button stays locked until the quiz is checked.
+  client-side for the learner's own retention (nothing saved); the **Mark as Complete**
+  button stays locked until the quiz is checked. Want responses in Salesforce instead?
+  Use SC Form Submissions — see [`docs/quizzes.md`](docs/quizzes.md).
 - 🟢 **Completion tracking** written back to a single custom object via a Liquid controller.
 
 ## Contents

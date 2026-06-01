@@ -46,8 +46,22 @@ Open `examples/quiz-test-harness.html` in a browser. It loads `marked.js` and th
 exact engine from the lesson template, renders a sample quiz, and scores it — a fast
 way to preview styling and behavior or to validate a quiz you wrote.
 
-## Scope
+## Scope & intent
 
-This is for **low-stakes knowledge checks** — self-paced reinforcement. Because
-scoring is client-side and nothing is saved, it is **not** suitable for graded or
-proctored exams. (Completion is still tracked separately via the progress object.)
+These quizzes **intentionally** give feedback to the *learner* — an immediate, private
+retention check ("did I absorb this?"). By design they are client-side and **save
+nothing**: no score leaves the browser, so they're great for low-stakes reinforcement
+and **not** suitable for graded or proctored exams. (Lesson *completion* is still tracked
+separately via the progress object.)
+
+### Want the results in Salesforce?
+
+If you'd rather capture responses — to report on comprehension, trigger follow-up, gate
+on a passing score, etc. — swap (or supplement) the self-scored quiz with a **StoreConnect
+Custom Form / Form Submission**, which writes submitted data into Salesforce where you can
+use Flows, reports, and the rest of the platform. See the
+[CustomForm Liquid object reference](https://support.storeconnect.com/article/custom-form-liquid-object-reference)
+and search "Custom Forms" / "Form Submissions" (and web-to-lead/web-to-case) on
+[support.storeconnect.com](https://support.storeconnect.com). That's a deliberate
+trade-off: client-side quiz = zero friction / zero data; Form Submission = captured data
+for richer follow-up.
