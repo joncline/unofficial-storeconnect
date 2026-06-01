@@ -1,0 +1,33 @@
+{% liquid
+  before
+    assign seq        = current_request.params.sequence  | unescape
+    assign status     = current_request.params.status    | unescape
+    assign article_id = current_request.params.articleId | unescape
+
+    if seq != blank and status != blank and current_customer != blank
+      query 'Contact' as me, email: current_customer.email
+      assign me_first = me | first
+
+      if me_first != blank
+        query 'Lesson_Progress__c' as progress_records, contact__c: me_first.sfid
+        assign record = progress_records | first
+
+        query 's_c__Article__c' as articles_by_path, s_c__path__c: article_id
+        assign article_record = articles_by_path | first
+        assign article_sfid = article_record.sfid
+
+        if record != blank and article_sfid != blank
+          assign lesson_field   = 'Lesson_' | append: seq | append: '__c'
+          assign progress_field = 'Lesson_' | append: seq | append: '_Progress__c'
+          assign progress_key   = 'lesson_' | append: seq | append: '_progress__c'
+          assign current_progress = record.custom_data[progress_key]
+
+          unless status == 'In Progress' and current_progress == 'Completed'
+            update record, field: lesson_field,   value: article_sfid
+            update record, field: progress_field, value: status
+          endunless
+        endif
+      endif
+    endif
+  endbefore
+%}

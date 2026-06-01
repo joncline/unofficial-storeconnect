@@ -1,0 +1,174 @@
+/* LMS Pagination shared styles — v3
+   Standalone: no Bootstrap dependency.
+   Neutral theme; override via CSS variables or later Liquid.
+*/
+:root {
+  --lms-bg: #ffffff;
+  --lms-text: #111111;
+  --lms-muted: #6c757d;
+  --lms-accent: #0d6efd; /* Bootstrap primary default; swap to PeopleFirst palette later */
+  --lms-border: #dee2e6;
+}
+
+html, body {
+  background: var(--lms-bg);
+  color: var(--lms-text);
+}
+
+.lms-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.lms-header,
+.lms-footer {
+  border-bottom: 1px solid var(--lms-border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.lms-footer {
+  border-bottom: 0;
+  border-top: 1px solid var(--lms-border);
+  padding-top: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.lms-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.lms-nav .lms-progress-text {
+  color: var(--lms-muted);
+  font-size: 0.95rem;
+}
+
+.lms-progress {
+  flex: 1 1 260px;
+  max-width: 540px;
+}
+
+/* Standalone progress bar — no Bootstrap required */
+.lms-progress .progress {
+  display: flex;
+  height: 0.75rem;
+  overflow: hidden;
+  background-color: #e9ecef;
+  border-radius: 0.375rem;
+  width: 100%;
+}
+
+.lms-progress .progress-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--lms-accent);
+  transition: width 0.3s ease;
+  border-radius: 0.375rem;
+}
+
+.lms-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Standalone button styles — no Bootstrap required */
+.lms-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.5;
+  border-radius: 0.375rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.lms-actions .btn:disabled,
+.lms-actions .btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.lms-actions .btn-primary {
+  background-color: var(--lms-accent);
+  border-color: var(--lms-accent);
+  color: #ffffff;
+}
+
+.lms-actions .btn-primary:hover:not(:disabled) {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+.lms-actions .btn-outline-secondary {
+  background-color: transparent;
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.lms-actions .btn-outline-secondary:hover:not(:disabled) {
+  background-color: #6c757d;
+  color: #ffffff;
+}
+
+.lms-main {
+  min-height: 40vh;
+}
+
+.lms-section {
+  display: none;
+}
+
+.lms-section.is-active {
+  display: block;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+  .lms-nav {
+    gap: 0.5rem 0.75rem;
+  }
+  .lms-progress {
+    flex-basis: 100%;
+    max-width: none;
+    order: 3;
+  }
+  .lms-actions {
+    width: 100%;
+    justify-content: space-between;
+    order: 2;
+  }
+}
+
+/* Focus styling for accessibility */
+.lms-section [tabindex="-1"]:focus {
+  outline: 2px solid var(--lms-accent);
+  outline-offset: 2px;
+}
+
+/* Utility spacing for content converted from markdown */
+.lms-section p {
+  margin-bottom: 1rem;
+}
+.lms-section h1, .lms-section h2, .lms-section h3, .lms-section h4 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}

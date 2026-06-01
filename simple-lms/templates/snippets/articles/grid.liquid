@@ -1,0 +1,183 @@
+<!-- Articles grid component for displaying article collections -->
+{%- if articles.size > 0 %}
+  <!-- Debug output for current category type -->
+  <!-- {{ current_article_category.type }} -->
+  <!-- Pagination setup - shows 50 articles per page -->
+  {%- paginate articles by 50 %}
+    <!-- Special handling for course lessons category -->
+    {%- if current_article_category.type == "course_lessons" %}
+      {%- comment %} Look up the current customer's Lesson_Progress__c row for per-lesson status badges. {%- endcomment %}
+      {% query 'Contact' as me, email: current_customer.email %}
+      {%- assign me_first = me | first -%}
+      {% query 'Lesson_Progress__c' as my_progress, contact__c: me_first.sfid %}
+
+      <script>
+        // Clean URL after Mark as Complete / In Progress writes (strip query params)
+        (function () {
+          if (location.search.indexOf('status=') !== -1) {
+            history.replaceState({}, '', location.pathname);
+          }
+        })();
+      </script>
+
+      {%- comment %}
+        LMS sync diagnostic — uncomment to re-enable
+        {% query 'Lesson_Progress__c' as all_progress %}
+        <div style="font-size:12px;color:#333;padding:.5rem;border:1px dashed #ccc;margin-bottom:1rem;background:#fafafa;">
+          <strong>LMS sync diagnostic</strong><br>
+          all PCP rows visible: <strong>{{ all_progress.size }}</strong><br>
+          current_customer.email: <code>{{ current_customer.email }}</code><br>
+          Contact by email: <strong>{{ me.size }}</strong> (sfid: <code>{{ me_first.sfid }}</code>)<br>
+          rows for me: <strong>{{ my_progress.size }}</strong>
+        </div>
+        {%- if my_progress.size > 0 -%}
+        <details style="font-size:11px;border:1px dashed #ccc;padding:.5rem;margin-bottom:1rem;">
+          <summary>My PCP rows ({{ my_progress.size }})</summary>
+          <ul>
+          {%- for r in my_progress -%}
+            <li>
+              <strong>{{ r.name }}</strong> — sfid: <code>{{ r.sfid }}</code>
+              <pre style="font-size:10px;max-height:160px;overflow:auto;background:#f0f0f0;padding:.25rem;">{{ r.custom_data | json }}</pre>
+            </li>
+          {%- endfor -%}
+          </ul>
+        </details>
+        {%- endif -%}
+      {%- endcomment %}
+      {%- assign my_pcp = my_progress | first -%}
+
+      {%- comment %} Access state: public (not signed in) / logged_in_no_membership / member. {%- endcomment %}
+      {%- assign access_state = 'public' -%}
+      {%- if current_customer != blank -%}
+        {%- assign access_state = 'logged_in_no_membership' -%}
+        {%- if my_pcp != blank -%}
+          {%- assign access_state = 'member' -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- comment %} Hero — course title + tagline. {%- endcomment %}
+      <section class="lms-hero" style="text-align:center;padding:1.5rem 1rem 2rem;border-bottom:1px solid #e5e7eb;margin-bottom:2rem;">
+        <h1 style="margin:0 0 0.5rem;font-size:2em;">Your Course Title</h1>
+        <p style="margin:0;color:#6b7280;font-size:1.1em;">A short, motivating tagline for your course.</p>
+      </section>
+
+      {%- if access_state == 'member' -%}
+        {%- comment %} Progress bar + count for active members. Counts only the main-track lessons (1..total_lessons). {%- endcomment %}
+        {%- assign total_lessons = 24 -%}   {%- comment %} CONFIG: number of main-track lessons {%- endcomment %}
+        {%- assign completed_count = 0 -%}
+        {%- for n in (1..total_lessons) -%}
+          {%- assign seq_str_p = n | prepend: '0' | slice: -2, 2 -%}
+          {%- assign key_p = 'lesson_' | append: seq_str_p | append: '_progress__c' -%}
+          {%- if my_pcp.custom_data[key_p] == "Completed" -%}
+            {%- assign completed_count = completed_count | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- assign pct = completed_count | times: 100 | divided_by: total_lessons -%}
+        <div class="lms-progress" style="margin-bottom:2rem;">
+          <div style="display:flex;justify-content:space-between;font-size:0.9em;margin-bottom:0.5rem;">
+            <span><strong>{{ completed_count }}</strong> of {{ total_lessons }} lessons complete</span>
+            <span style="color:#6b7280;">{{ pct }}%</span>
+          </div>
+          <div style="height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;">
+            <div style="width:{{ pct }}%;height:100%;background:#22c55e;transition:width 0.3s;"></div>
+          </div>
+        </div>
+      {%- else -%}
+        {%- comment %} CTA for non-members. {%- endcomment %}
+        <aside class="lms-cta" style="background:#fef9c3;border:1px solid #facc15;border-radius:8px;padding:1.5rem;margin-bottom:2rem;text-align:center;">
+          <h3 style="margin:0 0 0.5rem;color:#713f12;">Get full access to this course</h3>
+          <p style="margin:0 0 1rem;color:#713f12;">Unlock all lessons and start learning today.</p>
+          <a href="/products/YOUR-PRODUCT" style="display:inline-block;background:#16a34a;color:#fff;padding:0.75rem 1.5rem;border-radius:4px;text-decoration:none;font-weight:600;">Buy now</a>
+          {%- if access_state == 'public' -%}
+            <div style="margin-top:0.75rem;font-size:0.9em;color:#713f12;">
+              Already a member? <a href="/account/sign_in" style="color:#713f12;text-decoration:underline;">Sign in</a>
+            </div>
+          {%- endif -%}
+        </aside>
+      {%- endif -%}
+
+      {%- comment %} Each card independently checks "any prior lesson not Completed" — order-independent (the articles list iterates in publish-on order, which isn't guaranteed to be ascending by sequence). {%- endcomment %}
+
+      <section class="lms-section-group">
+        <h2 style="margin:0 0 1rem;font-size:1.4em;border-bottom:2px solid #e5e7eb;padding-bottom:0.5rem;">Course Lessons</h2>
+        <div class="sc-flex-col">
+          {%- for article in articles %}
+            {%- assign seq_num = article.data['Sequence__c'] | floor -%}
+            {%- if seq_num >= 1 and seq_num <= 24 -%}
+              {%- assign seq_str = seq_num | prepend: '0' | slice: -2, 2 -%}
+              {%- assign progress_field = 'lesson_' | append: seq_str | append: '_progress__c' -%}
+              {%- assign lesson_status = my_pcp.custom_data[progress_field] -%}
+              {%- assign is_locked = false -%}
+              {%- if access_state != 'member' -%}
+                {%- assign is_locked = true -%}
+              {%- elsif lesson_status == blank or lesson_status == "Not Started" -%}
+                {%- if seq_num > 1 -%}
+                  {%- assign prior_max = seq_num | minus: 1 -%}
+                  {%- for n in (1..prior_max) -%}
+                    {%- assign prior_seq_str = n | prepend: '0' | slice: -2, 2 -%}
+                    {%- assign prior_key = 'lesson_' | append: prior_seq_str | append: '_progress__c' -%}
+                    {%- assign prior_status = my_pcp.custom_data[prior_key] -%}
+                    {%- if prior_status != "Completed" -%}{%- assign is_locked = true -%}{%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              {%- endif -%}
+              {%- render "articles/card", article: article, sequence: seq_num, lesson_status: lesson_status, is_locked: is_locked %}
+            {%- endif -%}
+          {%- endfor %}
+        </div>
+      </section>
+
+      <section class="lms-section-group" style="margin-top:2.5rem;">
+        <h2 style="margin:0 0 0.5rem;font-size:1.4em;border-bottom:2px solid #e5e7eb;padding-bottom:0.5rem;">Preview — What’s Next</h2>
+        <p style="color:#6b7280;font-size:0.95em;margin:0 0 1rem;">Optional preview tier. Delete this whole section if your course has only one tier.</p>
+        <div class="sc-flex-col">
+          {%- for article in articles %}
+            {%- assign seq_num = article.data['Sequence__c'] | floor -%}
+            {%- if seq_num >= 25 -%}
+              {%- assign seq_str = seq_num | prepend: '0' | slice: -2, 2 -%}
+              {%- assign progress_field = 'lesson_' | append: seq_str | append: '_progress__c' -%}
+              {%- assign lesson_status = my_pcp.custom_data[progress_field] -%}
+              {%- assign is_locked = false -%}
+              {%- if access_state != 'member' -%}
+                {%- assign is_locked = true -%}
+              {%- elsif lesson_status == blank or lesson_status == "Not Started" -%}
+                {%- assign prior_max = seq_num | minus: 1 -%}
+                {%- for n in (1..prior_max) -%}
+                  {%- assign prior_seq_str = n | prepend: '0' | slice: -2, 2 -%}
+                  {%- assign prior_key = 'lesson_' | append: prior_seq_str | append: '_progress__c' -%}
+                  {%- assign prior_status = my_pcp.custom_data[prior_key] -%}
+                  {%- if prior_status != "Completed" -%}{%- assign is_locked = true -%}{%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {%- render "articles/card", article: article, sequence: seq_num, lesson_status: lesson_status, is_locked: is_locked %}
+            {%- endif -%}
+          {%- endfor %}
+        </div>
+      </section>
+    {%- else %}
+      <!-- Standard article grid layout with prominent styling -->
+      <div class="SC-CardGrid SC-CardGrid-prominent">
+        <!-- Loop through articles and render individual card components -->
+        {%- for article in articles %}
+          <!-- Pass article data and sequence for custom ordering -->
+          {%- render "articles/card", article: article, sequence: article.data['Sequence__c'] %}
+        {%- endfor %}
+      </div>
+    {%- endif %}
+    <!-- Render pagination navigation component -->
+    {%- render 'shared/pagination-nav', paginate: paginate %}
+  {%- endpaginate %}
+{%- else %}
+  <!-- Handle empty state - different messages for category vs general index -->
+  {%- if current_article_category %}
+    <!-- No articles in specific category -->
+    <div class="sc-shade-neutral">
+      {{ "articles.category.no_articles" | t }}
+    </div>
+  {%- else %}
+    <!-- No articles in general index -->
+    <div class="SC-Fallback">
+      {{ "articles.index.no_articles" | t }}
+    </div>
+  {%- endif %}
+{%- endif %}

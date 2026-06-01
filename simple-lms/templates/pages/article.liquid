@@ -1,0 +1,479 @@
+{%- if current_article.data['Article_Type__c'] == "Course" %}
+{%- assign lesson_seq = current_article.data['Sequence__c'] | floor | prepend: '0' | slice: -2, 2 -%}
+
+{%- comment %} Sequential unlock guard: refuse to render a course lesson whose prior lessons aren't all Completed. {%- endcomment %}
+{% query 'Contact' as lock_me, email: current_customer.email %}
+{%- assign lock_me_first = lock_me | first -%}
+{% query 'Lesson_Progress__c' as lock_progress, contact__c: lock_me_first.sfid %}
+{%- assign lock_pcp = lock_progress | first -%}
+{%- assign lock_curr_seq = current_article.data['Sequence__c'] | floor -%}
+{%- assign lock_curr_key = 'lesson_' | append: lesson_seq | append: '_progress__c' -%}
+{%- assign lock_curr_status = lock_pcp.custom_data[lock_curr_key] -%}
+{%- assign is_locked = false -%}
+{%- if lock_curr_status == blank or lock_curr_status == "Not Started" -%}
+  {%- if lock_curr_seq > 1 -%}
+    {%- assign lock_prior_max = lock_curr_seq | minus: 1 -%}
+    {%- for n in (1..lock_prior_max) -%}
+      {%- assign lock_prior_seq = n | prepend: '0' | slice: -2, 2 -%}
+      {%- assign lock_prior_key = 'lesson_' | append: lock_prior_seq | append: '_progress__c' -%}
+      {%- assign lock_prior_status = lock_pcp.custom_data[lock_prior_key] -%}
+      {%- if lock_prior_status != "Completed" -%}
+        {%- assign is_locked = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if is_locked %}
+<div class="sc-container sc-me">
+  <article class="SC-Article sc-max-width-skinny">
+    <div style="text-align:center;padding:3rem 1rem;">
+      <div style="font-size:3em;margin-bottom:1rem;">🔒</div>
+      <h2>This lesson isn't open yet</h2>
+      <p>Complete the lessons before this one to unlock it.</p>
+      <a href="/articles/YOUR-COURSE-INDEX" class="btn btn-primary" style="margin-top:1rem;">Back to Course</a>
+    </div>
+  </article>
+</div>
+{%- else %}
+
+<!-- start LMS course template -->
+<div class="sc-container sc-me lms-page" id="SC-article-{{ current_article.identifier }}" data-lms-lesson-seq="{{ lesson_seq }}" data-lms-article-slug="{{ current_article.identifier }}">
+  <span id="lms-top" aria-hidden="true"></span>
+  <article class="SC-Article">
+    {%- render "shared/page_header",
+        heading: current_article.title,
+        sub_heading: current_article.subtitle,
+        heading_styles: "SC-Article_heading",
+        wrapper_modifier: "sc-max-width"
+   %}
+  </article>
+  {%- if current_article.hero_image != blank %}
+      <img src="{{ current_article.hero_image.huge_url }}" class="sc-mb-base" loading="lazy">
+  {%- endif %}
+  <section class="sc-rich-text">
+    <article class="SC-Article">
+      <!-- start LMS course UI -->
+          <div class="lms-container">
+            <!-- Top Navigation -->
+            <div class="lms-header">
+              <nav class="lms-nav" aria-label="Section navigation (top)">
+                <div class="lms-progress-text text-muted" data-lms-progress="text-top" aria-live="polite">Step 1 of 3</div>
+                <div class="lms-progress">
+                  <div class="progress" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" data-lms-progress="bar-top" style="width: 33%"></div>
+                  </div>
+                </div>
+                <div class="lms-actions">
+                  <button type="button" class="btn btn-outline-secondary" data-lms-action="prev-top" aria-label="Previous section" disabled>Previous</button>
+                  <button type="button" class="btn btn-primary" data-lms-action="next-top" aria-label="Next section">Next</button>
+                </div>
+              </nav>
+            </div>
+
+            <!-- Main Content -->
+            <main class="lms-main" role="region" aria-live="polite">
+              <!-- Section 1 -->
+              <section class="lms-section is-active" data-section="1" aria-hidden="false">
+                {{ current_article.body_content }}
+              </section>
+
+              <!-- Section 2 -->
+              <section class="lms-section lms-markdown" data-section="2" aria-hidden="true">
+                {{ current_article.data['Content_Body_2_Markdown__c'] | strip }}
+              </section>
+
+              <!-- Section 3 -->
+              <section class="lms-section lms-markdown" data-section="3" aria-hidden="true">
+                 {{ current_article.data['Content_Body_3_Markdown__c'] | strip }}
+              </section>
+
+              <!-- Section 4 -->
+              <section class="lms-section" data-section="4" aria-hidden="true">
+                <!-- Only the lesson markdown is parsed by marked; the completion
+                     buttons below stay literal HTML so their ?sequence/&articleId/
+                     &status URL vars are never touched. -->
+                <div class="lms-markdown">
+                  {{ current_article.data['Content_Body_4_Markdown__c']  | strip}}
+                </div>
+              </section>
+            </main>
+
+            <!-- Bottom Navigation -->
+            <footer class="lms-footer">
+              <nav class="lms-nav" aria-label="Section navigation (bottom)">
+                <div class="lms-progress-text text-muted" data-lms-progress="text-bottom" aria-live="polite">Step 1 of 3</div>
+                <div class="lms-progress">
+                  <div class="progress" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" data-lms-progress="bar-bottom" style="width: 33%"></div>
+                  </div>
+                </div>
+                <div class="lms-actions">
+                  <button type="button" class="btn btn-outline-secondary" data-lms-action="prev-bottom" aria-label="Previous section" disabled>Previous</button>
+                  <button type="button" class="btn btn-primary" data-lms-action="next-bottom" aria-label="Next section">Next</button>
+                </div>
+              </nav>
+            </footer>
+
+            <!-- Completion actions: shown only on the last section, BELOW the
+                 Step/Previous footer row so the available actions are clear. The
+                 links stay outside any markdown-parsed region so their
+                 ?sequence/&articleId/&status URL vars are never touched. -->
+            <div class="lms-complete" data-lms-complete-block hidden>
+              <h1>Complete this lesson.</h1>
+              <div class="lms-actions" style="justify-content: center; margin-top: 1.5rem;">
+                <a href="/articles/YOUR-COURSE-INDEX" class="btn btn-outline-secondary">Back to Course</a>
+                <a href="/articles/YOUR-COURSE-INDEX/?sequence={{ lesson_seq }}&articleId={{ current_article.identifier }}&status=Completed" class="btn btn-primary" data-lms-complete>Mark as Complete</a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Shared LMS JS -->
+          <script src="PAGINATION_JS_URL"></script>
+
+    </article>
+  </section>
+</div>
+<!-- end LMS course template -->
+{%- endif %}
+{%- else %}
+
+<!-- article and post template -->
+<div class="sc-container sc-me" id="SC-article-{{ current_article.identifier }}">
+  <article class="SC-Article">
+    <div class="sc-mb-base sc-font-base sc-font-bold" style="color: rgb(47, 66, 99);">
+      {{ current_article.publish_on | date: "%B %-d, %Y" }}
+    </div>
+    {%- render "shared/page_header", 
+        heading: current_article.title,
+        sub_heading: current_article.subtitle,
+        heading_styles: "SC-Article_heading",
+        wrapper_modifier: "sc-max-width-skinny"      
+   %}
+  </article>
+  {%- if current_article.hero_image != blank %}
+      <img src="{{ current_article.hero_image.huge_url }}" class="sc-mb-base" loading="lazy">
+  {%- endif %}
+  <div class="SC-Grid">
+    {%- if all_article_categories.size > 0 %}
+      <div class="SC-Grid_sidebar">
+        {%- render "articles/sidebar" %}
+      </div>
+    {%- endif %}
+
+    <div class="SC-Grid_main">
+      <section class="sc-rich-text">
+        <article class="SC-Article sc-max-width-skinny">
+          {{ current_article.body_content }}
+        </article>
+      </section>
+    </div>
+  </div>
+</div>
+
+{%- endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  const markdownSections = document.querySelectorAll('.lms-markdown');
+
+  markdownSections.forEach(section => {
+    const rawValue = section.innerHTML.trim();
+    section.innerHTML = marked.parse(rawValue);
+  });
+</script>
+
+<script>
+  // LMS lesson progress beacon — mark this lesson "In Progress" the first time the
+  // user clicks Next while Section 1 is active. Fire-and-forget; doesn't block the
+  // pagination JS or navigate the user away.
+  (function () {
+    var courseEl = document.querySelector('[data-lms-lesson-seq]');
+    if (!courseEl) return;
+
+    var seq = courseEl.getAttribute('data-lms-lesson-seq');
+    var slug = courseEl.getAttribute('data-lms-article-slug');
+    if (!seq || !slug) return;
+
+    var beaconUrl = '/articles/YOUR-COURSE-INDEX/' +
+                    '?sequence=' + encodeURIComponent(seq) +
+                    '&articleId=' + encodeURIComponent(slug) +
+                    '&status=' + encodeURIComponent('In Progress');
+    var sent = false;
+
+    function sendBeacon() {
+      if (sent) return;
+      sent = true;
+      try { fetch(beaconUrl, { method: 'GET', credentials: 'same-origin' }).catch(function () {}); } catch (e) {}
+    }
+
+    document.querySelectorAll('[data-lms-action="next-top"], [data-lms-action="next-bottom"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var active = document.querySelector('.lms-section.is-active');
+        if (active && active.getAttribute('data-section') === '1') sendBeacon();
+      });
+    });
+  })();
+</script>
+
+<script>
+  // LMS nav enhancements (the hosted pagination JS only swaps sections):
+  //   1. Advancing with "Next" scrolls back to the #lms-top anchor, so each new
+  //      section/step is shown from the top of the page from the start. The page
+  //      itself is the scroller, so scrollIntoView on the top anchor is reliable.
+  //   2. On the last section the bottom "Next" is hidden, and the "Complete this
+  //      lesson" block (which lives below the footer) is shown — so the only
+  //      bottom actions are Previous, Back to Course, and Mark as Complete.
+  (function () {
+    function ready(fn) {
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+      else fn();
+    }
+
+    // 1. Scroll to the top anchor on Next
+    function scrollToTop() {
+      var top = document.getElementById('lms-top');
+      if (top && top.scrollIntoView) top.scrollIntoView(true);
+      // belt-and-suspenders for any scroller
+      window.scrollTo(0, 0);
+      if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
+    }
+    document.querySelectorAll('[data-lms-action="next-top"], [data-lms-action="next-bottom"]').forEach(function (btn) {
+      btn.addEventListener('click', scrollToTop);
+    });
+
+    // 2. On the last section: hide the bottom Next, reveal the completion block
+    ready(function () {
+      var sections = document.querySelectorAll('.lms-section');
+      if (!sections.length) return;
+      var lastSection = sections[sections.length - 1];
+      var nextBottom = document.querySelector('[data-lms-action="next-bottom"]');
+      var completeBlock = document.querySelector('[data-lms-complete-block]');
+
+      function syncLastSection() {
+        var onLast = lastSection.classList.contains('is-active');
+        if (nextBottom) nextBottom.style.display = onLast ? 'none' : '';
+        if (completeBlock) completeBlock.hidden = !onLast;
+      }
+      var obs = new MutationObserver(syncLastSection);
+      sections.forEach(function (s) {
+        obs.observe(s, { attributes: true, attributeFilter: ['class', 'aria-hidden'] });
+      });
+      syncLastSection();
+    });
+  })();
+</script>
+
+<!-- LMS self-scored quiz engine -->
+<style>
+  /* Course lessons drop the theme's article grid (no left category sidebar) and
+     widen past the theme frame's lg cap, centered. Responsive: 94vw until it
+     hits the 1320px ceiling on large screens. */
+  .sc-container.lms-page { max-width: min(1320px, 94vw); margin-left: auto; margin-right: auto; }
+  .lms-container { max-width: 100%; width: 100%; margin: 0 auto; }
+  @media (max-width: 576px) { .lms-container { padding-left: 1rem; padding-right: 1rem; } }
+
+  .lms-quiz { margin: 1.5rem 0; }
+  .lms-quiz_q { margin: 0 0 1.25rem; padding: 0; list-style: none; }
+  .lms-quiz_q > li { margin: 0 0 1.5rem; padding: 1rem 1.25rem; border: 1px solid #e2e6ee; border-radius: 10px; list-style: none; }
+  .lms-quiz_q > li > .lms-quiz_prompt { font-weight: 600; margin-bottom: .75rem; }
+  .lms-quiz_opts { list-style: none; margin: 0; padding: 0; }
+  .lms-quiz_opt { display: flex; align-items: flex-start; gap: .6rem; margin: .35rem 0; padding: .5rem .65rem; border-radius: 8px; cursor: pointer; transition: background .12s; }
+  .lms-quiz_opt:hover { background: #f4f6fb; }
+  .lms-quiz_opt input { margin-top: .2rem; }
+  .lms-quiz_opt.is-correct { background: #e7f6ec; box-shadow: inset 0 0 0 1px #34a853; }
+  .lms-quiz_opt.is-wrong { background: #fdeceb; box-shadow: inset 0 0 0 1px #ea4335; }
+  .lms-quiz_mark { margin-left: auto; font-weight: 700; }
+  .lms-quiz_opt.is-correct .lms-quiz_mark::after { content: "✓"; color: #1e7e34; }
+  .lms-quiz_opt.is-wrong .lms-quiz_mark::after { content: "✗"; color: #c5221f; }
+  .lms-quiz_actions { margin-top: 1rem; }
+  .lms-quiz_score { font-weight: 700; align-self: center; }
+  .lms-quiz.is-graded .lms-quiz_opt { cursor: default; }
+  /* completion button stays locked until the quiz is checked */
+  .lms-complete-locked { opacity: .5; pointer-events: none; cursor: not-allowed; }
+</style>
+<script>
+  // LMS self-scored quiz — runs after the marked.parse() pass above. Detects any
+  // ordered list whose items contain a checkbox task-list (the GFM "- [x]" / "- [ ]"
+  // convention) and turns it into an interactive, client-side-scored quiz. The "[x]"
+  // option is the answer key. Nothing is posted or persisted — scoring is local only.
+  (function () {
+    var quizSeq = 0;
+
+    // Completion gating: when a lesson has any quiz, the "Mark as Complete" button
+    // stays locked until every quiz on the page has been checked at least once.
+    var completeBtn = null;
+    var totalQuizzes = 0;
+    var gradedQuizzes = 0;
+
+    function unlockCompleteIfReady() {
+      if (completeBtn && gradedQuizzes >= totalQuizzes) {
+        completeBtn.classList.remove('lms-complete-locked');
+        completeBtn.removeAttribute('aria-disabled');
+      }
+    }
+
+    function textOf(li) {
+      // option text with the rendered task-list checkbox stripped out
+      var clone = li.cloneNode(true);
+      clone.querySelectorAll('input').forEach(function (i) { i.remove(); });
+      return clone.textContent.trim();
+    }
+
+    function isQuestionList(ol) {
+      // a quiz question list = <ol> with >=1 item that nests a checkbox list
+      return Array.prototype.some.call(ol.children, function (li) {
+        return li.tagName === 'LI' && li.querySelector(':scope > ul input[type="checkbox"]');
+      });
+    }
+
+    function buildQuiz(ol) {
+      var qid = 'lmsq' + (quizSeq++);
+      var questions = [];
+
+      Array.prototype.forEach.call(ol.querySelectorAll(':scope > li'), function (li, qi) {
+        var optList = li.querySelector(':scope > ul');
+        if (!optList) return;
+        var optLis = optList.querySelectorAll(':scope > li');
+        var cbs = optList.querySelectorAll(':scope > li input[type="checkbox"]');
+        if (!cbs.length) return;
+
+        // question prompt = the li's own text, minus the nested option list
+        var promptClone = li.cloneNode(true);
+        var nested = promptClone.querySelector(':scope > ul');
+        if (nested) nested.remove();
+        var promptHtml = promptClone.innerHTML.trim();
+
+        var qName = qid + '_q' + qi;
+        var correct = -1;
+        var opts = [];
+        Array.prototype.forEach.call(optLis, function (oli, oi) {
+          var cb = oli.querySelector('input[type="checkbox"]');
+          if (cb && cb.checked) correct = oi;
+          opts.push(textOf(oli));
+        });
+        questions.push({ name: qName, prompt: promptHtml, opts: opts, correct: correct });
+      });
+
+      if (!questions.length) return;
+
+      // render fresh markup
+      var wrap = document.createElement('div');
+      wrap.className = 'lms-quiz';
+      var list = document.createElement('ol');
+      list.className = 'lms-quiz_q';
+
+      questions.forEach(function (q) {
+        var li = document.createElement('li');
+        li.setAttribute('data-correct', q.correct);
+        var prompt = document.createElement('div');
+        prompt.className = 'lms-quiz_prompt';
+        prompt.innerHTML = q.prompt;
+        li.appendChild(prompt);
+
+        var ul = document.createElement('ul');
+        ul.className = 'lms-quiz_opts';
+        q.opts.forEach(function (text, oi) {
+          var oli = document.createElement('li');
+          var label = document.createElement('label');
+          label.className = 'lms-quiz_opt';
+          label.setAttribute('data-opt', oi);
+          var radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = q.name;
+          radio.value = oi;
+          var span = document.createElement('span');
+          span.textContent = text;
+          var mark = document.createElement('span');
+          mark.className = 'lms-quiz_mark';
+          label.appendChild(radio);
+          label.appendChild(span);
+          label.appendChild(mark);
+          oli.appendChild(label);
+          ul.appendChild(oli);
+        });
+        li.appendChild(ul);
+        list.appendChild(li);
+      });
+
+      wrap.appendChild(list);
+
+      var actions = document.createElement('div');
+      actions.className = 'lms-actions lms-quiz_actions';
+      var checkBtn = document.createElement('button');
+      checkBtn.type = 'button';
+      checkBtn.className = 'btn btn-primary';
+      checkBtn.textContent = 'Check my answers';
+      var retryBtn = document.createElement('button');
+      retryBtn.type = 'button';
+      retryBtn.className = 'btn btn-outline-secondary';
+      retryBtn.textContent = 'Try again';
+      retryBtn.style.display = 'none';
+      var score = document.createElement('span');
+      score.className = 'lms-quiz_score';
+      score.setAttribute('aria-live', 'polite');
+      actions.appendChild(checkBtn);
+      actions.appendChild(retryBtn);
+      actions.appendChild(score);
+      wrap.appendChild(actions);
+
+      checkBtn.addEventListener('click', function () {
+        var qLis = list.querySelectorAll(':scope > li');
+        var correctCount = 0;
+        qLis.forEach(function (li) {
+          var correct = parseInt(li.getAttribute('data-correct'), 10);
+          var checked = li.querySelector('input[type="radio"]:checked');
+          var picked = checked ? parseInt(checked.value, 10) : -1;
+          li.querySelectorAll('.lms-quiz_opt').forEach(function (opt) {
+            opt.classList.remove('is-correct', 'is-wrong');
+            var oi = parseInt(opt.getAttribute('data-opt'), 10);
+            if (oi === correct) opt.classList.add('is-correct');
+            else if (oi === picked) opt.classList.add('is-wrong');
+          });
+          if (picked === correct && correct >= 0) correctCount++;
+        });
+        wrap.classList.add('is-graded');
+        score.textContent = 'You scored ' + correctCount + ' / ' + qLis.length;
+        checkBtn.style.display = 'none';
+        retryBtn.style.display = '';
+        // count this quiz as completed (once) and unlock completion when all are done
+        if (!wrap.getAttribute('data-graded')) {
+          wrap.setAttribute('data-graded', '1');
+          gradedQuizzes++;
+          unlockCompleteIfReady();
+        }
+      });
+
+      retryBtn.addEventListener('click', function () {
+        wrap.classList.remove('is-graded');
+        wrap.querySelectorAll('input[type="radio"]').forEach(function (r) { r.checked = false; });
+        wrap.querySelectorAll('.lms-quiz_opt').forEach(function (o) { o.classList.remove('is-correct', 'is-wrong'); });
+        score.textContent = '';
+        retryBtn.style.display = 'none';
+        checkBtn.style.display = '';
+      });
+
+      ol.parentNode.replaceChild(wrap, ol);
+    }
+
+    var quizLists = Array.prototype.filter.call(
+      document.querySelectorAll('.lms-markdown ol'), isQuestionList
+    );
+    totalQuizzes = quizLists.length;
+
+    if (totalQuizzes > 0) {
+      completeBtn = document.querySelector('[data-lms-complete]');
+      if (completeBtn) {
+        completeBtn.classList.add('lms-complete-locked');
+        completeBtn.setAttribute('aria-disabled', 'true');
+        // belt-and-suspenders: block navigation while still locked
+        completeBtn.addEventListener('click', function (e) {
+          if (completeBtn.classList.contains('lms-complete-locked')) e.preventDefault();
+        });
+      }
+    }
+
+    quizLists.forEach(buildQuiz);
+  })();
+</script>

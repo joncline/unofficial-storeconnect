@@ -1,0 +1,56 @@
+<!--
+  Article Card Component
+  Purpose: Displays individual articles in a preferred layout with custom ordering
+  Features: Hero image, title, publish date, and optional summary
+-->
+<div class="SC-CardGrid_item" style="order: {{ sequence | default: 0 | times: 1 | round }}">
+
+  {%- if is_locked -%}
+    <div class="SC-ArticleCard sc-mb-spacious LMS-LessonCard--locked" style="opacity:0.55;cursor:not-allowed;" title="Complete prior lessons to unlock" aria-disabled="true">
+  {%- else -%}
+    <a href="{{ article.path }}" class="SC-ArticleCard sc-mb-spacious">
+  {%- endif -%}
+
+    {%- if article.hero_image != blank %}
+      <div class="SC-ArticleCard_image sc-image-aspect-ratio-1">
+        <img src="{{ article.hero_image.medium_url }}" loading="lazy">
+      </div>
+    {%- endif %}
+
+    {%- if current_article_category.type == "course_lessons" %}
+      {%- if is_locked -%}
+        {%- assign glyph = '🔒' -%}
+        {%- assign glyph_color = '#9ca3af' -%}
+        {%- assign badge_label = 'Locked' -%}
+      {%- else -%}
+        {%- case lesson_status -%}
+          {%- when "Completed" -%}{%- assign glyph = '●' -%}{%- assign glyph_color = '#22c55e' -%}
+          {%- when "In Progress" -%}{%- assign glyph = '◐' -%}{%- assign glyph_color = '#3b82f6' -%}
+          {%- else -%}{%- assign glyph = '○' -%}{%- assign glyph_color = '#9ca3af' -%}
+        {%- endcase -%}
+        {%- assign badge_label = lesson_status | default: 'Not Started' -%}
+      {%- endif -%}
+      {%- assign clean_title = article.title | replace: ' - Lesson', '' -%}
+      <div class="LMS-LessonCard" style="display:flex;align-items:center;gap:0.75rem;">
+        <span class="LMS-LessonCard_badge" style="font-size:1.5em;line-height:1;color:{{ glyph_color }};" aria-label="{{ badge_label }}">{{ glyph }}</span>
+        <span class="LMS-LessonCard_seq">Lesson {{ article.data['Sequence__c'] | floor }}</span>
+        <span class="LMS-LessonCard_title">{{ clean_title }}</span>
+      </div>
+    {%- else %}
+      <h3 class="SC-ArticleCard_heading">
+        {{ article.data['Sequence__c'] }} - {{ article.title }}
+      </h3>
+    {%- endif %}
+
+    {%- if article.publish_on != blank and current_article_category.type != "course_lessons" %}
+      <div class="SC-ArticleCard_date">
+        {{ article.publish_on | date: "%B %-d, %Y" }}
+      </div>
+    {%- endif %}
+
+  {%- if is_locked -%}
+    </div>
+  {%- else -%}
+    </a>
+  {%- endif -%}
+</div>
