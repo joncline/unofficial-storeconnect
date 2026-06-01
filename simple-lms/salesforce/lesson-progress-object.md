@@ -4,6 +4,12 @@ This LMS tracks per-learner, per-lesson progress in **one custom object** with a
 fixed set of lesson "slots". It is the only schema you must create; everything
 else is theme templates.
 
+> **Requires StoreConnect v21.1+.** This object only works because StoreConnect exposes
+> **custom objects through the custom-data pipeline** — readable from Liquid via
+> `{% query %}` / `custom_data` and writable via `{% update %}`. That support arrived in
+> **v21.1**; on earlier versions this object won't be queryable/updatable from the
+> storefront and the kit can't function.
+
 > **Naming.** This kit uses the API name `Lesson_Progress__c` throughout the
 > Liquid. If you name your object differently, find-and-replace `Lesson_Progress__c`
 > in `templates/controllers/articles/index.liquid` and `templates/snippets/articles/grid.liquid`

@@ -8,6 +8,14 @@ your own hosted video.
 > Originally built for a gated, cohort-based course at peoplefirstcrm.com and
 > generalized here so any StoreConnect store can drop it in.
 
+## Requirements
+
+- **StoreConnect v21.1 or later.** This LMS depends on **custom objects in the
+  custom-data pipeline** — i.e. a custom object (`Lesson_Progress__c`) being readable
+  from Liquid via `{% query %}` / `custom_data` and writable via `{% update %}`. Support
+  for custom objects in that pipeline landed in **v21.1**; earlier versions cannot run
+  this kit. Check your StoreConnect package version before installing.
+
 ## What you get
 
 - 📚 **Course dashboard** with three access states — public, signed-in-without-access,
