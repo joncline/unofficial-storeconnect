@@ -48,3 +48,11 @@ moment they gain access, however your store grants access.
 Flows deploy as **Draft** regardless of `<status>Active</status>` unless the org
 setting *Setup → Process Automation Settings → "Deploy processes and flows as active"*
 is enabled. Until then, activate each new version manually in Flow Builder after deploy.
+
+## References
+
+- StoreConnect: [Find and resolve sync errors](https://support.storeconnect.com/articles/videos-tutorials/how-to-find-and-resolve-sync-errors)
+  — context for the sync that makes storefront writes visible.
+- Record-triggered Flows are standard Salesforce automation — see Salesforce Flow
+  documentation, and [support.storeconnect.com](https://support.storeconnect.com) for
+  StoreConnect-specific sync/invocable details.

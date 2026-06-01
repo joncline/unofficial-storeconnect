@@ -58,6 +58,9 @@ This is what lets the LMS address a lesson slot by building the key as a string:
 - There is **no server-side redirect tag** in SC Liquid. After a write that used
   `?param=…`, strip the query string client-side:
   `history.replaceState({}, '', location.pathname)` (the dashboard snippet does this).
+- **Account routes: plural vs singular.** Use **`/accounts/register`** (plural) to
+  register a *new* account; use **`/account/...`** (singular) for an existing/known
+  account — e.g. `/account/sign_in` and the `/account` private portal area.
 
 ## Theme records & assets
 
@@ -74,3 +77,18 @@ This is what lets the LMS address a lesson slot by building the key as a string:
 Liquid `{% query %}` reads a **Postgres replica** of Salesforce, not the live row.
 A record you just wrote is invisible until replicated — keep the **Sync flow**
 (`salesforce/flows.md`) active so storefront writes appear immediately.
+
+## Official references
+
+These conventions are distilled from real use; for authoritative, current detail see
+[support.storeconnect.com](https://support.storeconnect.com):
+
+- [Liquid Objects hub](https://support.storeconnect.com/article/Liquid-Objects) — `{% query %}`, `custom_data`, and the object/filter naming used above.
+- [Article — Liquid Object Reference](https://support.storeconnect.com/articles/developer-reference/article-liquid-object-reference) — `identifier` / `s_c__Path__c`, and Article attributes.
+- [Request — Liquid Object Reference](https://support.storeconnect.com/articles/developer-reference/request-liquid-object-reference) — `current_request.params` (the auto-escape rule).
+- [Content block templates](https://support.storeconnect.com/article/content-block-templates) — template keys & structure.
+- [Theme Assets](https://support.storeconnect.com/article/Theme-Assets) — uploading/referencing JS & CSS.
+- [Find and resolve sync errors](https://support.storeconnect.com/articles/videos-tutorials/how-to-find-and-resolve-sync-errors) — the replica/sync behavior.
+
+> Verify any deep link against the live support site — StoreConnect's docs may move or
+> add pages over time.

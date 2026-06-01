@@ -56,8 +56,9 @@ into whichever you choose:
   account. Grant course access by attaching/updating a **membership**; your auto-create
   Flow then creates the learner's `Lesson_Progress__c` row.
 - **Free self-signup.** Learners can register at no cost through StoreConnect's standard
-  account registration controller (`/account/register`) — handy for free courses, lead
-  magnets, or trial lessons. You decide what (if anything) they must buy to unlock more.
+  new-account registration controller (`/accounts/register` — plural for registering a
+  new account) — handy for free courses, lead magnets, or trial lessons. You decide what
+  (if anything) they must buy to unlock more.
 - **Manual / admin grant.** Add or remove a learner's membership in Salesforce at any
   time; access and content visibility follow automatically.
 
@@ -146,6 +147,26 @@ This kit is written to be handed to an AI coding assistant working in **your** o
 
 The Liquid conventions doc captures the non-obvious `{% query %}` / `custom_data` /
 `{% update %}` / routing / replication rules that otherwise cost hours to rediscover.
+
+## StoreConnect documentation
+
+This kit builds on standard StoreConnect features — always prefer the official docs at
+[support.storeconnect.com](https://support.storeconnect.com) for current, authoritative
+guidance. Pages most relevant here:
+
+- **Liquid for theming** — the [Liquid Objects hub](https://support.storeconnect.com/article/Liquid-Objects),
+  the [Article object reference](https://support.storeconnect.com/articles/developer-reference/article-liquid-object-reference)
+  (lessons), and the [Request object reference](https://support.storeconnect.com/articles/developer-reference/request-liquid-object-reference)
+  (reading `current_request.params`).
+- **Templates & assets** — [Content block templates](https://support.storeconnect.com/article/content-block-templates)
+  and [Theme Assets](https://support.storeconnect.com/article/Theme-Assets) (uploading the pagination JS/CSS).
+- **Data sync** — [Find and resolve sync errors](https://support.storeconnect.com/articles/videos-tutorials/how-to-find-and-resolve-sync-errors)
+  (the replica/sync behavior the progress write-back depends on).
+- **Forms** — [CustomForm object reference](https://support.storeconnect.com/article/custom-form-liquid-object-reference).
+
+For **products, memberships/restricted content, customer accounts & registration,
+custom objects/fields, and Flows**, search the support site — those are standard
+StoreConnect/Salesforce setup topics rather than anything specific to this kit.
 
 ## Troubleshooting
 

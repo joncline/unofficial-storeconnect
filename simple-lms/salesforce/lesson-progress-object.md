@@ -58,3 +58,11 @@ A freshly written `Lesson_Progress__c` row is **invisible** to Liquid `{% query 
 until StoreConnect replicates it into its Postgres read-store. Keep the
 **Sync flow** (see `flows.md`) active so writes show up immediately. Without it,
 a learner can complete a lesson and not see the change until the next periodic sync.
+
+## References
+
+- StoreConnect: [Liquid Objects hub](https://support.storeconnect.com/article/Liquid-Objects)
+  — how `{% query %}` and `custom_data` expose custom records/fields to the storefront.
+- Creating custom objects/fields is standard Salesforce setup; see
+  [support.storeconnect.com](https://support.storeconnect.com) for how StoreConnect
+  surfaces them in Liquid.
