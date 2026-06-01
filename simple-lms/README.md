@@ -47,6 +47,30 @@ simple-lms/
     └── quiz-test-harness.html        preview/score a quiz in your browser (no org)
 ```
 
+## Accounts & access
+
+Learners get a StoreConnect customer account in any of the usual ways — this LMS plugs
+into whichever you choose:
+
+- **Buy a product or membership.** A normal checkout creates (or signs in) the customer
+  account. Grant course access by attaching/updating a **membership**; your auto-create
+  Flow then creates the learner's `Lesson_Progress__c` row.
+- **Free self-signup.** Learners can register at no cost through StoreConnect's standard
+  account registration controller (`/account/register`) — handy for free courses, lead
+  magnets, or trial lessons. You decide what (if anything) they must buy to unlock more.
+- **Manual / admin grant.** Add or remove a learner's membership in Salesforce at any
+  time; access and content visibility follow automatically.
+
+Once a learner has access, the gated content becomes visible to them on the storefront,
+and they can use it from the signed-in **`/account`** private area (the customer portal).
+Sign-in is the standard `/account/sign_in`.
+
+Because enrollment is just Salesforce automation, you can model it however you need:
+use **Flows, custom objects, and custom fields** to grant/revoke access, group learners
+into cohorts, set start dates, drip content, issue certificates, and more. The only thing
+this kit requires is that a learner ends up with a `Lesson_Progress__c` row — see
+[`salesforce/flows.md`](salesforce/flows.md).
+
 ## Installation & setup
 
 ### 1. Create the progress object (Salesforce)
