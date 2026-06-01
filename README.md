@@ -29,25 +29,11 @@ affiliated companies. "StoreConnect," "Salesforce," and any other marks are the 
 of their respective owners and are used here for identification and interoperability
 purposes only.
 
-**Provided "AS IS" — all risk assumed by you.** This software and its documentation are
-provided "as is" and "as available," without warranty or condition of any kind, express
-or implied, including but not limited to the implied warranties of merchantability,
-fitness for a particular purpose, title, and non-infringement. You are solely responsible
-for evaluating, testing, securing, and operating it in your own environment. You assume
-the entire risk arising out of its use or performance.
-
-**No liability.** To the maximum extent permitted by applicable law, in no event shall
-Jon Cline, nor any of his current or former employers, employees, contractors, officers,
-agents, or affiliates, nor StoreConnect or any of its related companies, be liable for
-any claim, damages, or other liability — whether direct, indirect, incidental, special,
-exemplary, punitive, or consequential (including but not limited to loss of data,
-revenue, profits, or business interruption) — arising from, out of, or in connection with
-this software or its use, even if advised of the possibility of such damages, and
-regardless of the legal theory (contract, tort, strict liability, or otherwise).
-
-**By using, copying, modifying, or distributing this software, you acknowledge that you
-have read, understood, and agree to the above, and you accept all responsibility and
-risk for its use.**
-
-> This disclaimer is provided for general information and is not legal advice. If you
-> have specific concerns, consult a qualified attorney.
+**No warranty; no liability; all risk assumed by you.** This software is distributed
+under the MIT License (see [`LICENSE`](LICENSE)), whose terms govern its use. As stated
+there, the Software is provided **"AS IS", WITHOUT WARRANTY OF ANY KIND**, express or
+implied, including but not limited to the warranties of merchantability, fitness for a
+particular purpose, and noninfringement; and **in no event shall the authors or copyright
+holders be liable** for any claim, damages, or other liability arising from, out of, or in
+connection with the Software or its use. You assume the entire risk for evaluating,
+securing, and operating it in your own environment.
