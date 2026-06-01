@@ -33,6 +33,22 @@ resolving to the right resource, preserving SEO and bookmarks. Mappings are also
 **automatically as resources move around** (e.g. when a slug changes), so links don't
 break. Search "Route Mapping" on the support site for setup details.
 
+## Found this useful?
+
+⭐ **If this helped, please star the repo** — it helps other StoreConnect builders find it.
+
+## See StoreConnect in action
+
+- **Events & meetups:** [storeconnect.com/articles/events](https://storeconnect.com/articles/events)
+  — demos, webinars, and community events where you can see StoreConnect live.
+- **Connect with StoreConnect:**
+  [LinkedIn](https://www.linkedin.com/company/storeconnect) ·
+  [X / Twitter](https://x.com/storeconnecthq) ·
+  [YouTube](https://www.youtube.com/channel/UCngKdP2x8l1wcbAKW3tvU8g)
+
+> Reminder: this is an **unofficial** community project (see Disclaimer). StoreConnect's
+> own channels above are the best source for product news and official support.
+
 ## License
 
 Released under the **MIT License** — see [`LICENSE`](LICENSE). Copyright (c) 2026 Jon Cline.
