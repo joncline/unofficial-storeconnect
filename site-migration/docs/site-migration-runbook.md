@@ -22,6 +22,22 @@ and POS.
 > The bundled STO example also carries an "Using AI to Build & Migrate StoreConnect Sites" demo page (+
 > articles and content block) — optional, safe to leave in or remove.
 
+## Automated path (orchestrator)
+
+`scripts/replicate-store.py` runs every step in this runbook in order, prompting
+**up front** for source org + store, target org, and the new store name. It is
+**dry run by default** and writes nothing without `--execute` (and confirms each
+step). It auto-detects a same-org copy and adds `--no-default` + `--suffix`.
+
+```bash
+python3 scripts/replicate-store.py            # interactive, dry run
+python3 scripts/replicate-store.py --execute   # interactive, writes
+```
+
+Use `--skip-backup` to reuse an already-captured backup on re-runs. The sections
+below document each step the orchestrator runs (and the manual commands if you
+prefer to drive them yourself).
+
 ## Configure
 
 Set these for **your** source org and each target org. The source org must be
@@ -296,6 +312,14 @@ python3 scripts/deploy-store-content.py $NEW --dry-run
 ```bash
 python3 scripts/deploy-store-content.py $NEW
 ```
+
+> **Same-org copy:** add **`--suffix=<s>`** (e.g. `--suffix=-copy`). It appends
+> `<s>` to every created page/article **Slug** and content-block/menu/menu-item
+> **Identifier**. This is REQUIRED in-org: `s_c__Page__c.s_c__Slug__c` is org-wide
+> unique and content blocks are org-wide (no store field), so without a suffix the
+> new store would collide with — and reuse — the source store's content instead of
+> getting independent copies. Leave it unset for a cross-org deploy into a blank
+> target. (The orchestrator sets this automatically for a same-org copy.)
 
 ## 8. POS  (`provision-pos.py`)
 

@@ -26,7 +26,13 @@ image references are handled by migrate-media.py.
 Run AFTER deploy-store.py + provision-categories.py + migrate-catalog.py.
 
 Usage:
-    python3 scripts/deploy-store-content.py <dst_org> [--dry-run]
+    python3 scripts/deploy-store-content.py <dst_org> [--suffix=<s>] [--dry-run]
+
+    --suffix=<s>  append <s> to every created page/article Slug and content-block/
+                  menu/menu-item Identifier. REQUIRED for a same-org copy (page
+                  Slug is org-wide unique; content blocks are org-wide), so the new
+                  store gets independent content instead of reusing the source's.
+                  Leave unset for a cross-org deploy into a blank target.
 """
 
 import json
@@ -200,10 +206,24 @@ def main():
     dry_run = '--dry-run' in sys.argv
     rest = [a for a in sys.argv[1:] if not a.startswith('--')]
     if len(rest) != 1:
-        print('Usage: python3 scripts/deploy-store-content.py <dst_org> [--dry-run]')
+        print('Usage: python3 scripts/deploy-store-content.py <dst_org> '
+              '[--suffix=<s>] [--dry-run]')
         sys.exit(1)
     dst_org = rest[0]
     mode = 'DRY RUN' if dry_run else 'LIVE'
+
+    # --suffix=<s>: append to the unique key of every created page/article (Slug)
+    # and content-block/menu/menu-item (Identifier). REQUIRED for a same-org copy:
+    # s_c__Page__c.s_c__Slug__c is org-wide unique and content blocks are org-wide
+    # (no store field), so without a suffix the new store would collide with — and
+    # reuse — the source store's content instead of getting independent copies.
+    # Cross-org (blank target) leaves it empty. Idempotency keys off the suffixed value.
+    suffix = next((a.split('=', 1)[1] for a in sys.argv[1:]
+                   if a.startswith('--suffix=')), '')
+
+    def keyed(v):
+        """Apply the per-store suffix to a slug/identifier value (no-op if unset)."""
+        return f'{v}{suffix}' if (suffix and v) else v
 
     cmap = json.loads((REPO_ROOT / 'orgs' / dst_org / 'category-map.json').read_text())
     dst_store_id = cmap['dst_store_id']
@@ -228,12 +248,14 @@ def main():
         """Create each rec if its key isn't already present; return src_id->dst_id."""
         idmap = {}
         for r in recs:
-            kv = r.get(key)
+            kv = keyed(r.get(key))   # suffixed target key (no-op when --suffix unset)
             if kv in existing:
                 idmap[r['Id']] = existing[kv]
                 print(f'  (exists) {sobject.split("__")[1]} {r.get("Name")}')
                 continue
             data = copy_fields(r, fields)
+            if suffix and r.get(key) is not None:
+                data[key] = kv   # write the suffixed slug/identifier so it's unique
             data.update(extra_fn(r))
             if dry_run:
                 idmap[r['Id']] = f'DRY_{kv}'
@@ -333,11 +355,13 @@ def main():
         # items.json doesn't carry s_c__Menu_Id__c — the owning menu is the folder.
         dst_menu_id = menu_map.get(json.loads(menu_rec_path.read_text())['Id'])
         for it in json.loads(items_path.read_text()):
-            ident = it.get('s_c__Identifier__c')
+            ident = keyed(it.get('s_c__Identifier__c'))   # suffixed (no-op if unset)
             if ident in existing_items:
                 item_idmap[it['Id']] = existing_items[ident]
                 continue
             data = copy_fields(it, mi_f)
+            if suffix and it.get('s_c__Identifier__c') is not None:
+                data['s_c__Identifier__c'] = ident
             # remap references
             data['s_c__Menu_Id__c'] = dst_menu_id
             for src_field, mp in (('s_c__Product_Category_Id__c', cat_map),

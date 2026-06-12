@@ -9,6 +9,7 @@ for other builders to learn from and adapt.
 | Folder | What it is |
 |---|---|
 | [`simple-lms/`](simple-lms/) | A self-paced **learning management system** built from StoreConnect primitives — Articles as lessons, a custom progress object, theme templates for a paginated lesson player, sequential unlocking, hosted video, and self-scored Markdown quizzes. No app server, no Apex (Flows only). |
+| [`site-migration/`](site-migration/) | **Replicate a StoreConnect store from one org into another** (or copy a store within the same org) — catalog, hierarchical categories, products + PricebookEntries, media, pages/menus/content-blocks, the homepage junctions, theme, store logo, and POS. An interactive orchestrator (`replicate-store.py`) drives the ordered, idempotent, dry-runnable steps; everything goes through the `sf` CLI (no app server, no Apex). |
 
 Each folder is self-contained with its own README and setup instructions, and is
 written to be adaptable to any StoreConnect org (placeholders for org-specific IDs/URLs)

@@ -8,11 +8,25 @@ Usage:
     # Preview what would happen (no writes)
     python3 scripts/deploy-store.py <src_org> <src_store_id> <dst_org> <dst_store_id> --dry-run
 
-    # Execute
+    # Execute (deploy onto an existing destination store)
     python3 scripts/deploy-store.py <src_org> <src_store_id> <dst_org> <dst_store_id>
 
-Example:
-    python3 scripts/deploy-store.py sc-council-demo a2qQE00000AQbKjYAL sc-clientsuccess a2DQE00000EUfYj2AL --dry-run
+    # Create a brand-new destination store and deploy onto it
+    python3 scripts/deploy-store.py <src_org> <src_store_id> <dst_org> --create-store
+
+Flags:
+    --create-store   create a new store in <dst_org> instead of targeting an
+                     existing <dst_store_id>.
+    --name="..."     override the new store's Name (default: the staged record's
+                     Name). Use for a same-org copy so it's distinguishable.
+    --no-default     do NOT set the deployed store as the org's Primary store
+                     (default is to set it). Use for same-org store->store copies
+                     so the existing primary keeps its domain routing.
+    --dry-run        print actions without writing.
+
+Example (same-org copy alongside the existing store):
+    python3 scripts/deploy-store.py <org> <src_store_id> <org> --create-store \
+        --name="My Store (Copy)" --no-default --dry-run
 """
 
 import csv
@@ -178,6 +192,11 @@ def main():
     dry_run = '--dry-run' in sys.argv
     create_store = '--create-store' in sys.argv
     no_default = '--no-default' in sys.argv
+    # Optional --name="My Store" overrides the deployed store's Name (otherwise it
+    # inherits the staged record's Name). Useful when adding a store alongside one
+    # of the same name (e.g. a same-org copy) so the two are distinguishable.
+    name_override = next((a.split('=', 1)[1] for a in sys.argv[1:]
+                          if a.startswith('--name=')), None)
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
 
     # --create-store makes a brand-new store record (named from the staged archive)
@@ -213,15 +232,16 @@ def main():
     # ── Load archive ─────────────────────────────────────────────────────────
     print("Loading source store archive...")
     store_rec, store_vars, theme_dir = load_store_archive(src_org, src_store_id)
-    store_name = store_rec.get('Name', src_store_id)
+    store_name = name_override or store_rec.get('Name', src_store_id)
 
     # Resolve (or create) the destination store.
     if create_store:
+        primary_note = "left as-is" if no_default else "set as Primary"
         if dry_run:
             dst_store_id = 'DRY_NEW_STORE'
             dst_name = store_name
             print(f"  [DRY RUN] create store '{store_name}' in {dst_org} "
-                  f"(not set as Primary)")
+                  f"(org primary {primary_note})")
         else:
             dst_store_id = create_record(dst_org, 's_c__Store__c', {'Name': store_name})
             dst_name = store_name
@@ -303,6 +323,8 @@ def main():
 
     # ── Step 7: Update dest store fields ─────────────────────────────────────
     update_data = {k: v for k, v in store_rec.items() if k not in SKIP_FIELDS and v is not None}
+    if name_override:
+        update_data['Name'] = name_override
     if not dry_run:
         update_data['s_c__Theme_Id__c'] = new_theme_id
     print(f"\nStep 7: Update dest store ({len(update_data)} fields + theme ID)")
