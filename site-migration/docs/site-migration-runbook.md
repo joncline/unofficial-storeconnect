@@ -56,6 +56,12 @@ SOURCE_STORE_ID=<source-s_c__Store__c-Id>
 TARGET_ORG=<target-org-alias>
 ```
 
+> **No target store Id needed up front.** The default flow **creates** the store in
+> Step 3 (`deploy-store.py --create-store`) and you capture its Id as
+> `$TARGET_STORE_ID` then. Only set `TARGET_STORE_ID` yourself if you're deploying
+> onto an **existing** target store (pass it to `deploy-store.py` in place of
+> `--create-store`).
+
 > **Using a different reference store?** Re-capture it with
 > `python3 scripts/backup-store.py $SOURCE_ORG $SOURCE_STORE_ID`, then move the produced
 > `orgs/$SOURCE_ORG/stores/<slug>` + `orgs/$SOURCE_ORG/themes/<slug>` into

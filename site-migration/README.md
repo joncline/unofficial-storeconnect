@@ -74,6 +74,11 @@ SOURCE_STORE_ID=<source-s_c__Store__c-Id>
 TARGET_ORG=<target-org-sf-alias>
 ```
 
+There's no **target store Id** here on purpose — the default flow **creates** the
+store in Step 3 (`deploy-store.py --create-store`) and you capture its Id
+(`TARGET_STORE_ID`) afterwards. Set one yourself only if you're deploying onto an
+**existing** target store.
+
 The migration pulls media URLs, featured associations, and the store logo **live**
 from the source org, so it must stay authenticated.
 
