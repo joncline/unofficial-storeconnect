@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geZPEAY",
+    "s_c__Product_Id__c": "01ta500000CHlY7AAL",
+    "s_c__Media_Id__c": "a1sa5000003tryVAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003tryVAAQ"
+      },
+      "s_c__Identifier__c": "hiking-trekking-poles-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geZQEAY",
+    "s_c__Product_Id__c": "01ta500000CHlY7AAL",
+    "s_c__Media_Id__c": "a1sa5000003tryWAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003tryWAAQ"
+      },
+      "s_c__Identifier__c": "hiking-trekking-poles-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

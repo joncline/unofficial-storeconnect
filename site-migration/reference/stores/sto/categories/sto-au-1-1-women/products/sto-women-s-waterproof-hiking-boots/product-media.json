@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geYKEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXdAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxSAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxSAAQ"
+      },
+      "s_c__Identifier__c": "women-s-waterproof-hiking-boots-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geYIEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXdAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxQAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxQAAQ"
+      },
+      "s_c__Identifier__c": "women-s-waterproof-hiking-boots-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

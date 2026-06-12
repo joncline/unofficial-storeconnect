@@ -1,0 +1,18 @@
+{
+  "Id": "a1Sa5000006SYNZEA4",
+  "Name": "a1Sa5000006SYNZ",
+  "s_c__Title__c": "The migration workflow",
+  "s_c__Subtitle__c": null,
+  "s_c__Slug__c": "sdaco-c1-l3-governance-vs-operations",
+  "s_c__Path__c": "sdaco-c1-l3-governance-vs-operations",
+  "s_c__Body_Markdown__c": "The agent migrates one component at a time, in dependency order, each step **idempotent** and **dry-runnable**:\n\n1. Pricebooks \u2192 2. Store + theme \u2192 3. Categories (+ id-map) \u2192 4. Catalog \u2192 5. Media \u2192 6. Content \u2192 7. POS.\n\nThree habits keep it safe:\n\n- **Dry-run first** \u2014 every step previews what it will write before it writes.\n- **Idempotent** \u2014 re-running matches existing records by name/slug/identifier, so an interrupted run is recovered by *re-running*, not by undo.\n- **Verify** \u2014 after each write, read the target org back and confirm the counts.\n\nRemember: an agent's conversation \"undo\" only affects local files \u2014 it can't roll back a record it already created in the org. Dry-run + idempotency, not undo, are the real safety net.",
+  "s_c__Intro_Markdown__c": null,
+  "s_c__Summary_Markdown__c": null,
+  "s_c__Meta_Title__c": null,
+  "s_c__Meta_Description__c": null,
+  "s_c__Meta_Keywords__c": null,
+  "s_c__Published__c": false,
+  "s_c__Publish_On__c": null,
+  "s_c__Require_Login__c": false,
+  "s_c__sC_Id__c": "db3da5d5-de98-4373-aeee-3bad46b2ab64"
+}

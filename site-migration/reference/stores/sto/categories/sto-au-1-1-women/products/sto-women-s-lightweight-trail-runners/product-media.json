@@ -1,0 +1,41 @@
+[
+  {
+    "Id": "a2Fa5000000ghTZEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXfAAL",
+    "s_c__Media_Id__c": "a1sa5000003uAUPAA2",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003uAUPAA2"
+      },
+      "s_c__Identifier__c": "shoes1"
+    },
+    "s_c__Position__c": null
+  },
+  {
+    "Id": "a2Fa5000000geYMEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXfAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxUAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxUAAQ"
+      },
+      "s_c__Identifier__c": "women-s-lightweight-trail-runners-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geYLEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXfAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxTAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxTAAQ"
+      },
+      "s_c__Identifier__c": "women-s-lightweight-trail-runners-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geYXEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXiAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxeAAA",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxeAAA"
+      },
+      "s_c__Identifier__c": "moisture-wicking-t-shirt-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geYTEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXiAAL",
+    "s_c__Media_Id__c": "a1sa5000003trwaAAA",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trwaAAA"
+      },
+      "s_c__Identifier__c": "moisture-wicking-t-shirt-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

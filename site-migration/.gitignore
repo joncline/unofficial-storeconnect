@@ -1,0 +1,7 @@
+# Python
+__pycache__/
+*.pyc
+
+# Per-target staging + generated maps (runtime; created when you run the steps)
+orgs/*
+!orgs/.gitkeep

@@ -1,0 +1,18 @@
+{
+  "Id": "a1Sa5000006SZ7REAW",
+  "Name": "a1Sa5000006SZ7R",
+  "s_c__Title__c": "Welcome & Getting Started",
+  "s_c__Subtitle__c": null,
+  "s_c__Slug__c": "sdaco-c1-l1-welcome-getting-started",
+  "s_c__Path__c": "sdaco-c1-l1-welcome-getting-started",
+  "s_c__Body_Markdown__c": "This short course shows how to use an **AI coding agent** (such as Claude Code) together with the Salesforce CLI (`sf`) to build and migrate StoreConnect sites.\n\n**What you need**\n- An `sf`-authenticated org and the StoreConnect managed package installed.\n- The migration scripts (this repo's `site-migration/scripts`).\n\n**How it works.** The agent reads the source store's backup, recreates each component in the target org, and verifies the result \u2014 while *you* stay in control of every change.\n\n**The golden rule:** the agent *proposes and dry-runs*; **you** run the live, org-changing step. Over the next three lessons we cover the data model, the migration workflow, and a worked example.",
+  "s_c__Intro_Markdown__c": null,
+  "s_c__Summary_Markdown__c": null,
+  "s_c__Meta_Title__c": null,
+  "s_c__Meta_Description__c": null,
+  "s_c__Meta_Keywords__c": null,
+  "s_c__Published__c": false,
+  "s_c__Publish_On__c": null,
+  "s_c__Require_Login__c": false,
+  "s_c__sC_Id__c": "afc5aed9-c996-49b9-af2f-c3733304a4eb"
+}

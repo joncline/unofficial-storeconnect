@@ -1,0 +1,23 @@
+[
+  {
+    "Id": "a2pa5000000ZXHKAA4",
+    "Name": "GOOGLE MAPS API KEY",
+    "s_c__Key__c": "GOOGLE_MAPS_API_KEY",
+    "s_c__Value__c": "AIzaSyARADtlqfduIT0E3bTmasK5LYGtdTx49Dw",
+    "s_c__Available_In_Liquid__c": true
+  },
+  {
+    "Id": "a2pa5000000ZXHFAA4",
+    "Name": "POS Path",
+    "s_c__Key__c": "pos_path",
+    "s_c__Value__c": "pos",
+    "s_c__Available_In_Liquid__c": false
+  },
+  {
+    "Id": "a2pa5000000ZXHLAA4",
+    "Name": "Enable Shipping Notes",
+    "s_c__Key__c": "use_shipping_notes",
+    "s_c__Value__c": "true",
+    "s_c__Available_In_Liquid__c": true
+  }
+]

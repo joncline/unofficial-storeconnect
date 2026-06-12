@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geZSEAY",
+    "s_c__Product_Id__c": "01ta500000CHlWpAAL",
+    "s_c__Media_Id__c": "a1sa5000003tryXAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003tryXAAQ"
+      },
+      "s_c__Identifier__c": "waterproof-dry-bag-item"
+    },
+    "s_c__Position__c": 0
+  },
+  {
+    "Id": "a2Fa5000000geZUEAY",
+    "s_c__Product_Id__c": "01ta500000CHlWpAAL",
+    "s_c__Media_Id__c": "a1sa5000003tryYAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003tryYAAQ"
+      },
+      "s_c__Identifier__c": "waterproof-dry-bag-action"
+    },
+    "s_c__Position__c": 0
+  }
+]

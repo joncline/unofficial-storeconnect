@@ -1,0 +1,18 @@
+{
+  "Id": "a1Sa5000006SZQnEAO",
+  "Name": "a1Sa5000006SZQn",
+  "s_c__Title__c": "Putting it into practice: migrate a site",
+  "s_c__Subtitle__c": null,
+  "s_c__Slug__c": "sdaco-c1-l4-putting-it-into-practice",
+  "s_c__Path__c": "sdaco-c1-l4-putting-it-into-practice",
+  "s_c__Body_Markdown__c": "A complete run, **source org \u2192 target org**:\n\n1. **Stage** the source store's backup into the target's working folder.\n2. **Pricebooks** \u2014 mirror the tier pricebooks.\n3. **Store + theme** \u2014 create the store record and push the theme.\n4. **Categories** \u2014 recreate the tree and emit the id-map.\n5. **Catalog** \u2014 products, prices across every pricebook, and category links.\n6. **Media** \u2014 import from public URLs and re-link to products.\n7. **Content** \u2014 pages, articles, content blocks, menus, and junctions.\n8. **POS** \u2014 an anonymous-checkout contact, outlet, and register.\n\nThen **verify**: the target should match the source's counts (products, categories, content blocks\u2026), and the storefront should render. Ask the agent to pull the storefront preview and confirm. That's a full site, migrated \u2014 with you approving every live step.",
+  "s_c__Intro_Markdown__c": null,
+  "s_c__Summary_Markdown__c": null,
+  "s_c__Meta_Title__c": null,
+  "s_c__Meta_Description__c": null,
+  "s_c__Meta_Keywords__c": null,
+  "s_c__Published__c": false,
+  "s_c__Publish_On__c": null,
+  "s_c__Require_Login__c": false,
+  "s_c__sC_Id__c": "50eb126d-1d49-4969-8a0a-757c92b8488b"
+}

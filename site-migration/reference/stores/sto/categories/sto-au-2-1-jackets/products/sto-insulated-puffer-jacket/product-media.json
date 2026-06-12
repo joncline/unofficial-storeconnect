@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geYUEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXjAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxbAAA",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxbAAA"
+      },
+      "s_c__Identifier__c": "insulated-puffer-jacket-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geYVEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXjAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxcAAA",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxcAAA"
+      },
+      "s_c__Identifier__c": "insulated-puffer-jacket-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

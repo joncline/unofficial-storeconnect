@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geZBEAY",
+    "s_c__Product_Id__c": "01ta500000CHlY2AAL",
+    "s_c__Media_Id__c": "a1sa5000003tryHAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003tryHAAQ"
+      },
+      "s_c__Identifier__c": "baby-long-sleeve-bodysuit-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geZCEAY",
+    "s_c__Product_Id__c": "01ta500000CHlY2AAL",
+    "s_c__Media_Id__c": "a1sa5000003tryIAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003tryIAAQ"
+      },
+      "s_c__Identifier__c": "baby-long-sleeve-bodysuit-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

@@ -1,0 +1,21 @@
+<section class="SC-ContentBlock SC-StoHero" id="SC-ContentBlock-{{ content_block.identifier }}" data-cb="{{ content_block.identifier }}">
+  {%- if content_block.image != blank %}
+    <div class="SC-StoHero_background" style="background-image: url('{{ content_block.image.url }}');">
+  {%- else %}
+    <div class="SC-StoHero_background SC-StoHero_background--placeholder">
+  {%- endif %}
+      <div class="SC-StoHero_overlay"></div>
+      <div class="SC-StoHero_content">
+        {%- unless content_block.title == blank %}
+          <h1 class="SC-StoHero_title">{{ content_block.title }}</h1>
+        {%- endunless %}
+        {%- unless content_block.subtitle == blank %}
+          <p class="SC-StoHero_subtitle">{{ content_block.subtitle }}</p>
+        {%- endunless %}
+        <div class="SC-StoHero_ctas">
+          <a href="/women" class="SC-StoHero_cta">Shop Women</a>
+          <a href="/men" class="SC-StoHero_cta">Shop Men</a>
+        </div>
+      </div>
+    </div>
+</section>

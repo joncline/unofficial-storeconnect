@@ -1,0 +1,37 @@
+<section class="SC-ContentBlock SC-StoCategories" id="SC-ContentBlock-{{ content_block.identifier }}" data-cb="{{ content_block.identifier }}">
+  <div class="SC-StoCategories_wrapper">
+    {%- unless content_block.title == blank %}
+      <div class="SC-StoCategories_header">
+        <h2 class="SC-StoCategories_title">{{ content_block.title }}</h2>
+        {%- unless content_block.subtitle == blank %}
+          <p class="SC-StoCategories_subtitle">{{ content_block.subtitle }}</p>
+        {%- endunless %}
+      </div>
+    {%- endunless %}
+    {%- if content_block.product_categories.size > 0 %}
+      <div class="SC-StoCategories_circles">
+        {%- for category in content_block.product_categories %}
+          <a href="{{ category.url }}" class="SC-StoCategories_circleCard">
+            <div class="SC-StoCategories_circleImage">
+              {%- if category.image != blank %}
+                <img loading="lazy" src="{{ category.image.url }}" alt="{{ category.name | escape }}" />
+              {%- else %}
+                <div class="SC-StoCategories_circlePlaceholder">
+                  <i class="fas fa-tag"></i>
+                </div>
+              {%- endif %}
+            </div>
+            <span class="SC-StoCategories_circleName">{{ category.name }}</span>
+          </a>
+        {%- endfor %}
+      </div>
+    {%- else %}
+      <p class="SC-StoCategories_empty">Categories coming soon.</p>
+    {%- endif %}
+    {%- unless content_block.link_label == blank or content_block.link_target == blank %}
+      <div class="SC-StoCategories_cta">
+        <a href="{{ content_block.link_target }}" class="SC-Button">{{ content_block.link_label }}</a>
+      </div>
+    {%- endunless %}
+  </div>
+</section>

@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geYkEAI",
+    "s_c__Product_Id__c": "01ta500000CHlXpAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxqAAA",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxqAAA"
+      },
+      "s_c__Identifier__c": "hiking-backpack-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geYjEAI",
+    "s_c__Product_Id__c": "01ta500000CHlXpAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxpAAA",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxpAAA"
+      },
+      "s_c__Identifier__c": "hiking-backpack-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

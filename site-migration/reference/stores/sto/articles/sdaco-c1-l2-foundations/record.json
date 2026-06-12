@@ -1,0 +1,18 @@
+{
+  "Id": "a1Sa5000006SZ93EAG",
+  "Name": "a1Sa5000006SZ93",
+  "s_c__Title__c": "Foundations: the StoreConnect data model",
+  "s_c__Subtitle__c": null,
+  "s_c__Slug__c": "sdaco-c1-l2-foundations",
+  "s_c__Path__c": "sdaco-c1-l2-foundations",
+  "s_c__Body_Markdown__c": "A StoreConnect site is a graph of linked records. The pieces that travel in a migration:\n\n- **Store + Theme** \u2014 templates, locale, store variables\n- **Pricebooks** \u2014 Standard plus any tier pricebooks\n- **Categories** \u2014 and the hierarchy edges that form the tree\n- **Products + PricebookEntries** \u2014 prices across each pricebook, plus category links\n- **Media** \u2014 imported from public URLs, then linked to products\n- **Content** \u2014 pages, articles, content blocks, menus, and the page\u2194block junctions that drive rendering\n- **POS** \u2014 an outlet and a register\n\n**Identity fields never travel** \u2014 a store's domain, internal record Ids, and lookups to records that don't exist in the target. The agent skips these and remaps references through an id-map it builds as it goes.",
+  "s_c__Intro_Markdown__c": null,
+  "s_c__Summary_Markdown__c": null,
+  "s_c__Meta_Title__c": null,
+  "s_c__Meta_Description__c": null,
+  "s_c__Meta_Keywords__c": null,
+  "s_c__Published__c": false,
+  "s_c__Publish_On__c": null,
+  "s_c__Require_Login__c": false,
+  "s_c__sC_Id__c": "17d279d5-29bf-4191-8282-5fd1fe535876"
+}

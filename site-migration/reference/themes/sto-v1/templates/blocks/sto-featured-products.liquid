@@ -1,0 +1,76 @@
+<section class="SC-ContentBlock SC-StoFeaturedProducts" id="SC-ContentBlock-{{ content_block.identifier }}" data-cb="{{ content_block.identifier }}">
+  <div class="SC-StoFeaturedProducts_wrapper">
+    {%- unless content_block.title == blank %}
+      <div class="SC-StoFeaturedProducts_header">
+        <div class="SC-StoFeaturedProducts_headerText">
+          <h2 class="SC-StoFeaturedProducts_title">{{ content_block.title }}</h2>
+          {%- unless content_block.subtitle == blank %}
+            <p class="SC-StoFeaturedProducts_subtitle">{{ content_block.subtitle }}</p>
+          {%- endunless %}
+        </div>
+        {%- if content_block.products.size > 4 %}
+          <div class="SC-StoFeaturedProducts_controls" data-slider-controls="{{ content_block.identifier }}" aria-label="Carousel Navigation">
+            <button class="sc-button-tns left" data-slider-prev="{{ content_block.identifier }}"><i class="fas fa-chevron-left"></i></button>
+            <button class="sc-button-tns right" data-slider-next="{{ content_block.identifier }}"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        {%- endif %}
+      </div>
+    {%- endunless %}
+    {%- if content_block.products.size > 0 %}
+      {%- if content_block.products.size <= 4 %}
+        <div class="SC-StoFeaturedProducts_grid">
+          {%- for product in content_block.products %}
+            {%- cache "product", items: [product, current_store, current_customer] -%}
+              {%- render "products/card", product: product %}
+            {%- endcache -%}
+          {%- endfor %}
+        </div>
+      {%- else %}
+        <div class="SC-StoFeaturedProducts_slider" data-featured-slider="{{ content_block.identifier }}">
+          {%- for product in content_block.products %}
+            <div class="SC-StoFeaturedProducts_card">
+              {%- cache "product", items: [product, current_store, current_customer] -%}
+                {%- render "products/card", product: product %}
+              {%- endcache -%}
+            </div>
+          {%- endfor %}
+        </div>
+      {%- endif %}
+    {%- else %}
+      <div class="SC-StoFeaturedProducts_grid">
+        <p class="SC-StoFeaturedProducts_empty">Products coming soon.</p>
+      </div>
+    {%- endif %}
+    {%- unless content_block.link_label == blank or content_block.link_target == blank %}
+      <div class="SC-StoFeaturedProducts_cta">
+        <a href="{{ content_block.link_target }}" class="SC-Button">{{ content_block.link_label }}</a>
+      </div>
+    {%- endunless %}
+  </div>
+</section>
+<script>
+(function(){
+  document.querySelectorAll('[data-slider-prev]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-slider-prev');
+      var slider = document.querySelector('[data-featured-slider="'+id+'"]');
+      if(slider){
+        var card = slider.querySelector('.SC-StoFeaturedProducts_card');
+        var w = card ? card.offsetWidth + 24 : 300;
+        slider.scrollBy({left: -w, behavior: 'smooth'});
+      }
+    });
+  });
+  document.querySelectorAll('[data-slider-next]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-slider-next');
+      var slider = document.querySelector('[data-featured-slider="'+id+'"]');
+      if(slider){
+        var card = slider.querySelector('.SC-StoFeaturedProducts_card');
+        var w = card ? card.offsetWidth + 24 : 300;
+        slider.scrollBy({left: w, behavior: 'smooth'});
+      }
+    });
+  });
+})();
+</script>

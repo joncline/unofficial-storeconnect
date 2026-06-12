@@ -1,0 +1,18 @@
+{
+  "Id": "a26a5000002fbSHAAY",
+  "Name": "a26a5000002fbSH",
+  "s_c__Title__c": "Using AI to Build & Migrate StoreConnect Sites",
+  "s_c__Subtitle__c": null,
+  "s_c__Slug__c": "sda-colorado-course-1",
+  "s_c__Path__c": "sda-colorado-course-1",
+  "s_c__Body_Markdown__c": "{{ content_page | render_content_blocks }}",
+  "s_c__Meta_Title__c": null,
+  "s_c__Meta_Description__c": null,
+  "s_c__Meta_Keywords__c": null,
+  "s_c__Visible__c": true,
+  "s_c__Hide__c": false,
+  "s_c__Require_Login__c": false,
+  "s_c__Position__c": null,
+  "s_c__Parent_Id__c": null,
+  "s_c__sC_Id__c": "d8d01927-d9e0-4585-a666-238aef391655"
+}

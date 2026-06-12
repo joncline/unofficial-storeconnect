@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geYJEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXeAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxRAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxRAAQ"
+      },
+      "s_c__Identifier__c": "women-s-hiking-gloves-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geYPEAY",
+    "s_c__Product_Id__c": "01ta500000CHlXeAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxXAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxXAAQ"
+      },
+      "s_c__Identifier__c": "women-s-hiking-gloves-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

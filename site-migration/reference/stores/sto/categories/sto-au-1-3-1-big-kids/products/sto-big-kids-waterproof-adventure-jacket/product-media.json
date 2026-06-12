@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geYqEAI",
+    "s_c__Product_Id__c": "01ta500000CHlXrAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxwAAA",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxwAAA"
+      },
+      "s_c__Identifier__c": "big-kids-waterproof-adventure-jacket-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geYnEAI",
+    "s_c__Product_Id__c": "01ta500000CHlXrAAL",
+    "s_c__Media_Id__c": "a1sa5000003trxtAAA",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxtAAA"
+      },
+      "s_c__Identifier__c": "big-kids-waterproof-adventure-jacket-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

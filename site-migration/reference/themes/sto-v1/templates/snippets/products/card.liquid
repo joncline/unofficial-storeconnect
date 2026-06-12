@@ -1,0 +1,43 @@
+{%- assign card_images = product.media | where: "file_type", "image" -%}
+<div class="SC-ProductCard" id="product_{{ product.id }}">
+  <div class="SC-ProductCard_image_wrapper">
+    <a class="SC-ProductCard_image" href="{{ product.path }}">
+      {%- if card_images.size > 1 %}
+        <img class="SC-ProductCard_img SC-ProductCard_img--primary" loading="lazy" src="{{ card_images[0].url }}" alt="{{ product.name | escape }}" />
+        <img class="SC-ProductCard_img SC-ProductCard_img--secondary" loading="lazy" src="{{ card_images[1].url }}" alt="{{ product.name | escape }}" />
+      {%- elsif card_images.size == 1 %}
+        <img loading="lazy" src="{{ card_images[0].url }}" alt="{{ product.name | escape }}" />
+      {%- elsif product.image != blank %}
+        <img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name | escape }}" />
+      {%- endif %}
+    </a>
+  </div>
+  <div class="SC-ProductCard_headlineRow">
+    <a class="SC-ProductCard_headline" href="{{ product.path }}">{{ product.name }}</a>
+    <i class="far fa-heart SC-ProductCard_wishlist"></i>
+  </div>
+  <div class="SC-ProductCard_subheadline">
+    <div class="SC-ProductCard_price">
+      {%- if product.pricing.hide_price? %}
+        <span class="SC-ProductCard_price_item">{{ product.pricing.hide_price_text }}</span>
+      {%- elsif product.pricing.has_price? %}
+        {%- if current_store.display_currency? and product.pricing.can_purchase_with_currency? %}
+          {%- if product.pricing.has_sale_price? %}
+            <span class="SC-ProductCard_price_item SC-ProductCard_price_item--sale">{{ product.pricing.sale_price | money }}</span>
+            <span class="SC-ProductCard_price_item SC-ProductCard_price_item--compare">{{ product.pricing.original_price | money }}</span>
+          {%- else %}
+            <span class="SC-ProductCard_price_item">{{ product.pricing.price | money }}</span>
+          {%- endif %}
+        {%- endif %}
+      {%- endif %}
+    </div>
+    {%- if product.available == false %}
+      <div class="SC-ProductCard_fulfilment">Out of stock</div>
+    {%- elsif product.pickup_available %}
+      <div class="SC-ProductCard_fulfilment">Pickup available</div>
+    {%- endif %}
+  </div>
+  <div class="SC-ProductCard_actions">
+    <a href="{{ product.path }}" class="SC-Button SC-Button-secondary SC-Button-expanded">View Product</a>
+  </div>
+</div>

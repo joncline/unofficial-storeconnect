@@ -1,0 +1,59 @@
+[
+  {
+    "Id": "01ua5000004CStdAAG",
+    "Pricebook2Id": "01sa5000003trrbAAA",
+    "Pricebook2": {
+      "attributes": {
+        "type": "Pricebook2",
+        "url": "/services/data/v67.0/sobjects/Pricebook2/01sa5000003trrbAAA"
+      },
+      "Name": "Hidden"
+    },
+    "Product2Id": "01ta500000CHlXyAAL",
+    "UnitPrice": 19.99,
+    "IsActive": true,
+    "s_c__Bundle_Only__c": false,
+    "s_c__Hide_Price__c": false,
+    "s_c__Hide_Price_Text__c": null,
+    "s_c__Bundle_Price_Strategy__c": null,
+    "s_c__Disable_Quantity_Selection__c": false
+  },
+  {
+    "Id": "01ua5000004CSq5AAG",
+    "Pricebook2Id": "01sa5000003trrZAAQ",
+    "Pricebook2": {
+      "attributes": {
+        "type": "Pricebook2",
+        "url": "/services/data/v67.0/sobjects/Pricebook2/01sa5000003trrZAAQ"
+      },
+      "Name": "Standard Price Book"
+    },
+    "Product2Id": "01ta500000CHlXyAAL",
+    "UnitPrice": 19.99,
+    "IsActive": true,
+    "s_c__Bundle_Only__c": false,
+    "s_c__Hide_Price__c": false,
+    "s_c__Hide_Price_Text__c": null,
+    "s_c__Bundle_Price_Strategy__c": null,
+    "s_c__Disable_Quantity_Selection__c": false
+  },
+  {
+    "Id": "01ua5000004CStcAAG",
+    "Pricebook2Id": "01sa5000003trraAAA",
+    "Pricebook2": {
+      "attributes": {
+        "type": "Pricebook2",
+        "url": "/services/data/v67.0/sobjects/Pricebook2/01sa5000003trraAAA"
+      },
+      "Name": "Wholesale"
+    },
+    "Product2Id": "01ta500000CHlXyAAL",
+    "UnitPrice": 15.99,
+    "IsActive": true,
+    "s_c__Bundle_Only__c": false,
+    "s_c__Hide_Price__c": false,
+    "s_c__Hide_Price_Text__c": null,
+    "s_c__Bundle_Price_Strategy__c": null,
+    "s_c__Disable_Quantity_Selection__c": false
+  }
+]

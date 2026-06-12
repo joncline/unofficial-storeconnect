@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geY9EAI",
+    "s_c__Product_Id__c": "01ta500000CHlXZAA1",
+    "s_c__Media_Id__c": "a1sa5000003trxHAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trxHAAQ"
+      },
+      "s_c__Identifier__c": "women-s-insulated-winter-jacket-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geY8EAI",
+    "s_c__Product_Id__c": "01ta500000CHlXZAA1",
+    "s_c__Media_Id__c": "a1sa5000003trwZAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003trwZAAQ"
+      },
+      "s_c__Identifier__c": "women-s-insulated-winter-jacket-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "a2Fa5000000geZHEAY",
+    "s_c__Product_Id__c": "01ta500000CHlY4AAL",
+    "s_c__Media_Id__c": "a1sa5000003tryMAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003tryMAAQ"
+      },
+      "s_c__Identifier__c": "baby-sun-hat-item"
+    },
+    "s_c__Position__c": 10
+  },
+  {
+    "Id": "a2Fa5000000geZGEAY",
+    "s_c__Product_Id__c": "01ta500000CHlY4AAL",
+    "s_c__Media_Id__c": "a1sa5000003tryNAAQ",
+    "s_c__Media_Id__r": {
+      "attributes": {
+        "type": "s_c__Media__c",
+        "url": "/services/data/v67.0/sobjects/s_c__Media__c/a1sa5000003tryNAAQ"
+      },
+      "s_c__Identifier__c": "baby-sun-hat-action"
+    },
+    "s_c__Position__c": 20
+  }
+]

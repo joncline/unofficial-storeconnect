@@ -1,0 +1,124 @@
+{%- cache "header-v8", items: [current_store, current_customer, current_cart] -%}
+{%- require "scripts/menu.js" -%}
+<div class="SC-StoPreheader">
+  <div class="SC-StoPreheader_wrapper">
+    <div class="SC-StoPreheader_left">
+      <a href="/find/locations" class="SC-StoPreheader_link"><i class="fas fa-map-marker-alt"></i> Find a Store</a>
+      <a href="/about" class="SC-StoPreheader_link"><i class="fas fa-users"></i> Community</a>
+    </div>
+    <div class="SC-StoPreheader_center">
+      <span><i class="fas fa-truck"></i> Free Shipping on Orders Over $150</span>
+    </div>
+    <div class="SC-StoPreheader_right">
+      {%- if current_customer %}
+        <a href="/account" class="SC-StoPreheader_link"><i class="fas fa-user"></i> {{ current_customer.firstname }}</a>
+      {%- else %}
+        <a href="/auth/sign_in" class="SC-StoPreheader_link"><i class="fas fa-user"></i> Sign In</a>
+      {%- endif %}
+      <a href="/wishlist" class="SC-StoPreheader_link"><i class="fas fa-heart"></i></a>
+      <a href="/contact-us" class="SC-StoPreheader_link"><i class="fas fa-question-circle"></i></a>
+    </div>
+  </div>
+</div>
+<header class="SC-StoHeader" id="SC-Header">
+  <div class="SC-StoHeader_wrapper">
+    <div class="SC-StoHeader_logo">
+      <a href="{{ current_store.home_path }}">
+        {%- if current_store.logo != blank %}
+          <img src="{{ current_store.logo.url }}" alt="{{ current_store.name | escape }}" />
+        {%- else %}
+          <span class="SC-StoHeader_storeName">{{ current_store.name }}</span>
+        {%- endif %}
+      </a>
+    </div>
+    <nav class="SC-StoHeader_nav">
+      {%- if current_store.header_menu != blank %}
+        {{ current_store.header_menu.render }}
+      {%- else %}
+        <ul class="SC-Menu dropdown tier1" id="SC-HeaderMenuPrimary" data-menu="header">
+          {%- render "header/menu" %}
+        </ul>
+      {%- endif %}
+    </nav>
+    <div class="SC-StoHeader_actions">
+      <div class="SC-StoHeader_search">
+        {%- render "header/search" %}
+      </div>
+      <ul class="SC-StoHeader_iconList">
+        <li class="SC-Menu_item" id="SC-CartTrigger" style="cursor: pointer;">
+          <a class="SC-Menu_link" href="/cart" onclick="event.preventDefault();">
+            <i class="fas fa-shopping-bag"></i> Cart
+            {%- if current_cart != blank and current_cart.item_count > 0 %}
+              <span class="SC-StoCartBadge">{{ current_cart.item_count }}</span>
+            {%- endif %}
+          </a>
+        </li>
+      </ul>
+    </div>
+    {%- assign menu_id = current_store.header_menu | try: "identifier" | default: "header" %}
+    <button data-menu-init="{{ menu_id }}" class="SC-StoHeader_mobileToggle" aria-label="Menu" type="button">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+<div class="SC-StoCartSidebar" id="SC-CartSidebar">
+  <div class="SC-StoCartSidebar_header">
+    {%- if current_cart != blank and current_cart.item_count > 0 %}
+      <h3 class="SC-StoCartSidebar_title">Cart ({{ current_cart.item_count }})</h3>
+    {%- else %}
+      <h3 class="SC-StoCartSidebar_title">Cart</h3>
+    {%- endif %}
+    <button class="SC-StoCartSidebar_close" id="SC-CartClose" type="button">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  {%- if current_cart != blank and current_cart.item_count > 0 %}
+    <div class="SC-StoCartSidebar_items">
+      {%- for item in current_cart.items %}
+        <div class="SC-StoCartSidebar_item">
+          <div class="SC-StoCartSidebar_itemImage">
+            {%- if item.product.image != blank %}
+              <a href="{{ item.product.path }}">
+                <img src="{{ item.product.image.thumb_url }}" alt="{{ item.product.name | escape }}" />
+              </a>
+            {%- endif %}
+          </div>
+          <div class="SC-StoCartSidebar_itemInfo">
+            <a href="{{ item.product.path }}" class="SC-StoCartSidebar_itemName">{{ item.product.name }}</a>
+            <div class="SC-StoCartSidebar_itemPrice">{{ item.pricing.price | money }}</div>
+            <div class="SC-StoCartSidebar_itemQty">Qty: {{ item.quantity }}</div>
+          </div>
+        </div>
+      {%- endfor %}
+    </div>
+    <div class="SC-StoCartSidebar_footer">
+      <div class="SC-StoCartSidebar_total">
+        <span>Subtotal</span>
+        <span>{{ current_cart.total | money }}</span>
+      </div>
+      <a href="/cart" class="SC-StoCartSidebar_viewCart">View Cart</a>
+    </div>
+  {%- else %}
+    <div class="SC-StoCartSidebar_empty">
+      <i class="fas fa-shopping-bag"></i>
+      <div class="SC-StoCartSidebar_emptyText">Your cart is empty</div>
+      <a href="/" class="SC-StoCartSidebar_continueShopping">Continue Shopping</a>
+    </div>
+  {%- endif %}
+</div>
+<div class="SC-StoCartOverlay" id="SC-CartOverlay"></div>
+<script>
+(function(){
+  var trigger = document.getElementById('SC-CartTrigger');
+  var sidebar = document.getElementById('SC-CartSidebar');
+  var overlay = document.getElementById('SC-CartOverlay');
+  var closeBtn = document.getElementById('SC-CartClose');
+  function openCart(e){ e.preventDefault(); sidebar.classList.add('is-active'); overlay.classList.add('is-active'); document.body.style.overflow='hidden'; }
+  function closeCart(){ sidebar.classList.remove('is-active'); overlay.classList.remove('is-active'); document.body.style.overflow=''; }
+  if(trigger) trigger.addEventListener('click', openCart);
+  if(closeBtn) closeBtn.addEventListener('click', closeCart);
+  if(overlay) overlay.addEventListener('click', closeCart);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeCart(); });
+})();
+</script>
+{%- endcache -%}

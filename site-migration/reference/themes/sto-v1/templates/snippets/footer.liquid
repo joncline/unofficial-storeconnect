@@ -1,0 +1,92 @@
+{%- cache "footer", items: [current_store, current_customer, current_privacy] -%}
+<footer class="SC-StoFooter" id="SC-Footer">
+  <div class="SC-StoFooter_main">
+    <div class="SC-StoFooter_wrapper">
+      <div class="SC-StoFooter_brand">
+        <div class="SC-StoFooter_logo">
+          {%- if current_store.logo != blank %}
+            <a href="{{ current_store.home_path }}"><img src="{{ current_store.logo.url }}" alt="{{ current_store.name | escape }}" /></a>
+          {%- else %}
+            <a href="{{ current_store.home_path }}" class="SC-StoFooter_storeName">{{ current_store.name }}</a>
+          {%- endif %}
+        </div>
+        <p class="SC-StoFooter_tagline">Stay up-to-date with the latest deals, new arrivals, and more from STO.</p>
+        <form class="SC-StoFooter_emailForm" onsubmit="event.preventDefault();">
+          <div class="SC-StoFooter_emailWrap">
+            <i class="fas fa-envelope SC-StoFooter_emailIcon"></i>
+            <input type="email" placeholder="Enter email address" class="SC-StoFooter_emailInput" />
+            <button type="submit" class="SC-StoFooter_emailBtn"><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </form>
+        <div class="SC-StoFooter_social">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+        </div>
+      </div>
+      <div class="SC-StoFooter_columns">
+        <div class="SC-StoFooter_col">
+          <h4 class="SC-StoFooter_colTitle">Shop By Category</h4>
+          <ul class="SC-StoFooter_colList">
+            <li><a href="/women">Women</a></li>
+            <li><a href="/men">Men</a></li>
+            <li><a href="/kids">Kids</a></li>
+            <li><a href="/clothing">Clothing</a></li>
+            <li><a href="/gear">Gear</a></li>
+            <li><a href="/technology">Technology</a></li>
+          </ul>
+        </div>
+        <div class="SC-StoFooter_col">
+          <h4 class="SC-StoFooter_colTitle">Resources</h4>
+          <ul class="SC-StoFooter_colList">
+            <li><a href="/account">My Account</a></li>
+            <li><a href="/orders">Check Order</a></li>
+            <li><a href="/wishlist">Wish List</a></li>
+            <li><a href="/check-voucher">Check Voucher Balance</a></li>
+            <li><a href="/articles/demo-articles/demo">Demo Details</a></li>
+            <li><a href="/articles/demo-articles/requirement">Demo Requirement</a></li>
+            <li><a href="/api/liquid-version" target="_blank">Demo Liquid Version</a></li>
+            <li><a href="/api/store-connect-version" target="_blank">Demo App Version</a></li>
+          </ul>
+        </div>
+        <div class="SC-StoFooter_col">
+          <h4 class="SC-StoFooter_colTitle">Customer Service</h4>
+          <ul class="SC-StoFooter_colList">
+            <li><a href="/contact-us">Contact Us</a></li>
+            <li><a href="/contact-us">Help</a></li>
+            <li><a href="/sitemap">Site Map</a></li>
+          </ul>
+        </div>
+        <div class="SC-StoFooter_col">
+          <h4 class="SC-StoFooter_colTitle">About</h4>
+          <ul class="SC-StoFooter_colList">
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/about">Careers</a></li>
+            <li><a href="/about">News</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="SC-StoFooter_legal">
+    <div class="SC-StoFooter_legalWrapper">
+      <div class="SC-StoFooter_builtOn">
+        Built on <img src="https://res.cloudinary.com/hldwkme08/image/upload/v1754954237/media/00dqe00000aoxhj2a1/SC-bold-transparent-horizontal-2.png" alt="StoreConnect" class="SC-StoFooter_sfLogo" />
+      </div>
+      <div class="SC-StoFooter_copyright">
+        &copy; {{ current_store.timezone | now | date: "%Y" }} {{ current_store.name }}. Demo store for StoreConnect demonstration purposes.
+      </div>
+      <div class="SC-StoFooter_legalLinks">
+        <a href="#">Legal</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy</a>
+        <a href="/contact-us">Contact</a>
+        {%- if current_privacy.accepted? %}
+          <a class="sc-show-privacy-settings">{{ "privacy.manage_settings" | t }}</a>
+        {%- endif %}
+      </div>
+    </div>
+  </div>
+</footer>
+{%- endcache -%}
