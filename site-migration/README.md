@@ -69,9 +69,9 @@ truth** — ask the agent to reconcile and update the doc.
 Set your source (reference) and target, then follow the runbook:
 
 ```bash
-REF_ORG=<source-org-sf-alias>
-REF_STORE_ID=<source-s_c__Store__c-Id>
-NEW=<target-org-sf-alias>
+SOURCE_ORG=<source-org-sf-alias>
+SOURCE_STORE_ID=<source-s_c__Store__c-Id>
+TARGET_ORG=<target-org-sf-alias>
 ```
 
 The migration pulls media URLs, featured associations, and the store logo **live**
@@ -139,11 +139,11 @@ end — the orchestrator runs exactly these, in this order:
 ## Same-org store → store copy
 
 You can also use this to copy one store's elements onto **another store in the same
-org** — set `REF_ORG` and `NEW` to the **same alias**, with different store Ids:
+org** — set `SOURCE_ORG` and `TARGET_ORG` to the **same alias**, with different store Ids:
 
 ```bash
-REF_ORG=myorg   NEW=myorg
-REF_STORE_ID=<source-store-Id>          # the store to copy from
+SOURCE_ORG=myorg   TARGET_ORG=myorg
+SOURCE_STORE_ID=<source-store-Id>          # the store to copy from
 # target store: create a fresh one in Step 3 with --create-store --no-default,
 # or pass an existing target store Id to deploy-store.py
 ```

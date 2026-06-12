@@ -6,8 +6,8 @@ and POS so the target renders the same storefront. Every step is an idempotent
 script that supports `--dry-run`.
 
 **The typical case:** you already have a working store in a **source org** and want
-to replicate it into a **target org**. Point the runbook at your source (`REF_ORG` +
-`REF_STORE_ID`) and your target (`NEW`), capture the source store once with
+to replicate it into a **target org**. Point the runbook at your source (`SOURCE_ORG` +
+`SOURCE_STORE_ID`) and your target (`TARGET_ORG`), capture the source store once with
 `scripts/backup-store.py`, then run the ordered steps.
 
 This package ships with the **STO / Southern Trail Outfitters** store as a worked
@@ -45,20 +45,20 @@ authenticated to `sf` — the migration pulls media URLs, featured associations,
 the store logo **live** from it (not just from the bundled backup).
 
 ```bash
-REF_ORG=<your-source-org-alias>
+SOURCE_ORG=<your-source-org-alias>
 ```
 
 ```bash
-REF_STORE_ID=<source-s_c__Store__c-Id>
+SOURCE_STORE_ID=<source-s_c__Store__c-Id>
 ```
 
 ```bash
-NEW=<target-org-alias>
+TARGET_ORG=<target-org-alias>
 ```
 
 > **Using a different reference store?** Re-capture it with
-> `python3 scripts/backup-store.py $REF_ORG $REF_STORE_ID`, then move the produced
-> `orgs/$REF_ORG/stores/<slug>` + `orgs/$REF_ORG/themes/<slug>` into
+> `python3 scripts/backup-store.py $SOURCE_ORG $SOURCE_STORE_ID`, then move the produced
+> `orgs/$SOURCE_ORG/stores/<slug>` + `orgs/$SOURCE_ORG/themes/<slug>` into
 > `reference/stores/sto` + `reference/themes/sto-v1` (or adjust Step 1 paths). Run
 > all scripts from the project root.
 
@@ -67,8 +67,8 @@ NEW=<target-org-alias>
 ## 0. Prerequisites
 
 - This project checked out locally; **run all scripts from the project root**.
-- Both orgs authenticated to `sf` with aliases: the **source** (`$REF_ORG`, see
-  **Configure**) and the **target** (`$NEW`).
+- Both orgs authenticated to `sf` with aliases: the **source** (`$SOURCE_ORG`, see
+  **Configure**) and the **target** (`$TARGET_ORG`).
 - The target already has the **StoreConnect managed package** installed. A
   **sandbox** (copy of a prod that has it) or an org you've installed it into is
   ready as-is. A **blank** org or a **scratch** org needs the package first — see 0.1
@@ -93,13 +93,13 @@ lines up (StoreConnect eCommerce, namespace `s_c`). Find that version + its pack
 version Id (`04t…`) by listing the package on the **source** org:
 
 ```bash
-sf package installed list --target-org $REF_ORG
+sf package installed list --target-org $SOURCE_ORG
 ```
 
 Install it into the target org (takes several minutes — `--wait` polls to completion):
 
 ```bash
-sf package install --package <04t...PackageVersionId> --target-org $NEW --wait 30 --no-prompt
+sf package install --package <04t...PackageVersionId> --target-org $TARGET_ORG --wait 30 --no-prompt
 ```
 
 Verify the namespace now resolves (the query succeeding — not erroring with
@@ -107,7 +107,7 @@ Verify the namespace now resolves (the query succeeding — not erroring with
 itself will be 0 until Step 3 creates the STO store):
 
 ```bash
-sf data query --target-org $NEW --query "SELECT COUNT() FROM s_c__Store__c"
+sf data query --target-org $TARGET_ORG --query "SELECT COUNT() FROM s_c__Store__c"
 ```
 
 ### 0.2 Create the API-only StoreConnect sync user (required)
@@ -128,7 +128,7 @@ syncs. Follow the dedicated runbook end to end: **`docs/storeconnect-sync-user-s
 
 Step 3 creates a new store in the target (via `deploy-store.py --create-store`) and,
 by default, sets it as the target org's default store. You'll capture its Id as
-`$STORE` after Step 3 and use it for every later step. `$REF_STORE_ID` (your source
+`$TARGET_STORE_ID` after Step 3 and use it for every later step. `$SOURCE_STORE_ID` (your source
 store) is used as `<src_store_id>` in the commands below.
 
 ---
@@ -136,26 +136,26 @@ store) is used as `<src_store_id>` in the commands below.
 ## 1. Stage the source store into the target's working folder
 
 The catalog/media/content scripts read the source store backup from
-`orgs/<NEW>/stores/...` and the theme from `orgs/<NEW>/themes/...`. Copy the
+`orgs/<TARGET_ORG>/stores/...` and the theme from `orgs/<TARGET_ORG>/themes/...`. Copy the
 **reference template** (the bundled STO example, or your own captured source store —
 see Configure) into the target org's working folder:
 
 ```bash
-mkdir -p orgs/$NEW/themes orgs/$NEW/stores
+mkdir -p orgs/$TARGET_ORG/themes orgs/$TARGET_ORG/stores
 ```
 
 ```bash
-cp -r reference/themes/sto-v1 orgs/$NEW/themes/sto-v1
+cp -r reference/themes/sto-v1 orgs/$TARGET_ORG/themes/sto-v1
 ```
 
 ```bash
-cp -r reference/stores/sto orgs/$NEW/stores/sto
+cp -r reference/stores/sto orgs/$TARGET_ORG/stores/sto
 ```
 
 > Migrating your **own** source store (not the bundled STO)? First capture it with
-> `python3 scripts/backup-store.py $REF_ORG $REF_STORE_ID` (writes under
-> `orgs/$REF_ORG/`), then either refresh `reference/` from that output or stage
-> directly from `orgs/$REF_ORG/stores/<slug>` into `orgs/$NEW/`.
+> `python3 scripts/backup-store.py $SOURCE_ORG $SOURCE_STORE_ID` (writes under
+> `orgs/$SOURCE_ORG/`), then either refresh `reference/` from that output or stage
+> directly from `orgs/$SOURCE_ORG/stores/<slug>` into `orgs/$TARGET_ORG/`.
 
 ---
 
@@ -165,37 +165,37 @@ Mirror the 5 non-standard tier pricebooks (Bronze/Gold/Hidden/Silver/Wholesale)
 from the reference org. Standard already exists in every org.
 
 ```bash
-python3 scripts/provision-pricebooks.py $REF_ORG $NEW --dry-run
+python3 scripts/provision-pricebooks.py $SOURCE_ORG $TARGET_ORG --dry-run
 ```
 
 ```bash
-python3 scripts/provision-pricebooks.py $REF_ORG $NEW
+python3 scripts/provision-pricebooks.py $SOURCE_ORG $TARGET_ORG
 ```
 
 ## 3. Store record + theme  (`deploy-store.py --create-store`)
 
 Create a new **STO** store record and deploy the store fields + STO v1 theme onto
 it. Source org = the new org (we read the staged backup co-located under
-`orgs/$NEW/`). `--create-store` makes a brand-new store named from the staged
+`orgs/$TARGET_ORG/`). `--create-store` makes a brand-new store named from the staged
 record ("STO"); the process is the same for the org's first or Nth store. Because
 the reference STO store is the default, the deploy **sets the new STO store as the
 org's default/Primary store** (StoreConnect unsets any prior default), so the org
 domain root serves STO.
 
 ```bash
-python3 scripts/deploy-store.py $NEW $REF_STORE_ID $NEW --create-store --dry-run
+python3 scripts/deploy-store.py $TARGET_ORG $SOURCE_STORE_ID $TARGET_ORG --create-store --dry-run
 ```
 
 ```bash
-python3 scripts/deploy-store.py $NEW $REF_STORE_ID $NEW --create-store
+python3 scripts/deploy-store.py $TARGET_ORG $SOURCE_STORE_ID $TARGET_ORG --create-store
 ```
 
-The live run prints `+ created store 'STO'  (<id>)`. Capture that Id as `$STORE`
+The live run prints `+ created store 'STO'  (<id>)`. Capture that Id as `$TARGET_STORE_ID`
 for the remaining steps:
 
 ```bash
-STORE=$(sf data query --target-org "$NEW" --query "SELECT Id FROM s_c__Store__c WHERE Name = 'STO' ORDER BY CreatedDate DESC LIMIT 1" --json | python3 -c "import sys,json;print(json.load(sys.stdin)['result']['records'][0]['Id'])")
-echo "$STORE"
+TARGET_STORE_ID=$(sf data query --target-org "$TARGET_ORG" --query "SELECT Id FROM s_c__Store__c WHERE Name = 'STO' ORDER BY CreatedDate DESC LIMIT 1" --json | python3 -c "import sys,json;print(json.load(sys.stdin)['result']['records'][0]['Id'])")
+echo "$TARGET_STORE_ID"
 ```
 
 - Creates the store named **"STO"** (Name is deployed from the staged record) and
@@ -209,12 +209,12 @@ echo "$STORE"
   `s_c__Unique_Domain_Path__c` later for a friendly path (Manual steps).
 - **Same-org store→store copy:** add **`--no-default`** so the new store does NOT
   become the org's primary (which would hijack the existing default store):
-  `python3 scripts/deploy-store.py $NEW $REF_STORE_ID $NEW --create-store --no-default`.
+  `python3 scripts/deploy-store.py $TARGET_ORG $SOURCE_STORE_ID $TARGET_ORG --create-store --no-default`.
 
 ## 4. Categories + hierarchy + id-map  (`provision-categories.py`)
 
 Copy the 20 categories into the new store's taxonomy, **reproduce the category
-tree**, and emit `orgs/$NEW/category-map.json` (consumed by the next steps).
+tree**, and emit `orgs/$TARGET_ORG/category-map.json` (consumed by the next steps).
 
 There is **no parent field** on `s_c__Product_Category__c`. The tree lives in
 `s_c__Product_Category_Hierarchy__c` (one row per parent→child edge). The script
@@ -223,11 +223,11 @@ categories are "STO - AU - 1 - Demographic", "2 - Clothing", "3 - Gear", and
 "4 - Technology". So this step creates **20 categories + 16 hierarchy edges**.
 
 ```bash
-python3 scripts/provision-categories.py $REF_ORG $REF_STORE_ID $NEW $STORE --dry-run
+python3 scripts/provision-categories.py $SOURCE_ORG $SOURCE_STORE_ID $TARGET_ORG $TARGET_STORE_ID --dry-run
 ```
 
 ```bash
-python3 scripts/provision-categories.py $REF_ORG $REF_STORE_ID $NEW $STORE
+python3 scripts/provision-categories.py $SOURCE_ORG $SOURCE_STORE_ID $TARGET_ORG $TARGET_STORE_ID
 ```
 
 ## 5. Catalog: products + PBEs  (`migrate-catalog.py`)
@@ -236,15 +236,15 @@ Faithfully migrate the products across the 20 categories with real prices across
 all 6 pricebooks + category links.
 
 ```bash
-python3 scripts/migrate-catalog.py $NEW --category Clothing --dry-run   # pilot one
+python3 scripts/migrate-catalog.py $TARGET_ORG --category Clothing --dry-run   # pilot one
 ```
 
 ```bash
-python3 scripts/migrate-catalog.py $NEW --category Clothing             # pilot live
+python3 scripts/migrate-catalog.py $TARGET_ORG --category Clothing             # pilot live
 ```
 
 ```bash
-python3 scripts/migrate-catalog.py $NEW                                 # full catalog
+python3 scripts/migrate-catalog.py $TARGET_ORG                                 # full catalog
 ```
 
 Runs minutes (many `sf` calls). Idempotent — safe to re-run if interrupted.
@@ -255,11 +255,11 @@ Import product media (from each source media's public CDN URL → target CDN) +
 product-media links.
 
 ```bash
-python3 scripts/migrate-media.py $NEW --dry-run
+python3 scripts/migrate-media.py $TARGET_ORG --dry-run
 ```
 
 ```bash
-python3 scripts/migrate-media.py $NEW
+python3 scripts/migrate-media.py $TARGET_ORG
 ```
 
 ## 6b. Content-block template picklist values  (`provision-content-templates.py`)
@@ -273,11 +273,11 @@ step adds the missing values (those the staged blocks reference) to the picklist
 via the Tooling API. **Run it before Step 7.**
 
 ```bash
-python3 scripts/provision-content-templates.py $NEW --dry-run
+python3 scripts/provision-content-templates.py $TARGET_ORG --dry-run
 ```
 
 ```bash
-python3 scripts/provision-content-templates.py $NEW
+python3 scripts/provision-content-templates.py $TARGET_ORG
 ```
 
 ## 7. Store content: pages/menus/articles/content-blocks  (`deploy-store-content.py`)
@@ -306,11 +306,11 @@ Home/Terms page, and Pricebook. This step now also:
   Step 3), so the storefront logo appears.
 
 ```bash
-python3 scripts/deploy-store-content.py $NEW --dry-run
+python3 scripts/deploy-store-content.py $TARGET_ORG --dry-run
 ```
 
 ```bash
-python3 scripts/deploy-store-content.py $NEW
+python3 scripts/deploy-store-content.py $TARGET_ORG
 ```
 
 > **Same-org copy:** add **`--suffix=<s>`** (e.g. `--suffix=-copy`). It appends
@@ -326,11 +326,11 @@ python3 scripts/deploy-store-content.py $NEW
 Provision an Anonymous Checkout contact + 1 Outlet + 1 Register.
 
 ```bash
-python3 scripts/provision-pos.py $NEW --dry-run
+python3 scripts/provision-pos.py $TARGET_ORG --dry-run
 ```
 
 ```bash
-python3 scripts/provision-pos.py $NEW
+python3 scripts/provision-pos.py $TARGET_ORG
 ```
 
 ## 8b. Store-user roles — web console / website builder access  (`provision-store-user-roles.py`)
@@ -350,11 +350,11 @@ each role. Roles are store-agnostic, so this can run any time after the org admi
 exists.
 
 ```bash
-python3 scripts/provision-store-user-roles.py $NEW --dry-run
+python3 scripts/provision-store-user-roles.py $TARGET_ORG --dry-run
 ```
 
 ```bash
-python3 scripts/provision-store-user-roles.py $NEW
+python3 scripts/provision-store-user-roles.py $TARGET_ORG
 ```
 
 ---
@@ -383,15 +383,15 @@ python3 scripts/provision-store-user-roles.py $NEW
 ## 10. Verify
 
 ```bash
-sf data query --target-org $NEW --query "SELECT COUNT() FROM Product2"
+sf data query --target-org $TARGET_ORG --query "SELECT COUNT() FROM Product2"
 ```
 
 ```bash
-sf data query --target-org $NEW --query "SELECT COUNT() FROM s_c__Product_Media__c"
+sf data query --target-org $TARGET_ORG --query "SELECT COUNT() FROM s_c__Product_Media__c"
 ```
 
 ```bash
-sf data query --target-org $NEW --query "SELECT COUNT() FROM s_c__Product_Category_Hierarchy__c"
+sf data query --target-org $TARGET_ORG --query "SELECT COUNT() FROM s_c__Product_Category_Hierarchy__c"
 ```
 
 Expected counts (approximate where exact figures aren't certain):
