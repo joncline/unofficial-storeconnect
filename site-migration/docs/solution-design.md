@@ -119,7 +119,9 @@ these; you can also run them individually.
   org whose folder holds the backup — for a same-org copy that's just the org).
 - **Theme:** reused if a theme of the same Name exists, else created; pushes all
   templates (upsert by key, **no `templates/` prefix or `.liquid` suffix**),
-  variables, locales, assets.
+  variables, locales, assets. `--theme-suffix=<s>` appends `<s>` to the theme Name so
+  a **new, independent** theme is created instead of reusing one (used for same-org
+  copies — see §5).
 - **Store variables:** copied except `GOOGLE_MAPS_API_KEY` (per-org credential).
 - **Store fields:** copies all non-skipped fields. `SKIP_FIELDS` always omits
   identity/system fields, `s_c__Domain__c`/`s_c__Unique_Domain_Path__c`/
@@ -128,7 +130,7 @@ these; you can also run them individually.
 - **Flags:** `--create-store` makes a new store (named from the staged record, or
   `--name="…"`). **Step 8** sets the new store as the org **primary** *by default*;
   `--no-default` skips that (required for a same-org copy so the live store keeps the
-  root domain).
+  root domain). `--theme-suffix=<s>` forces an independent theme (same-org copies).
 
 ### 4. `provision-categories.py <src_org> <src_store_id> <dst_org> <dst_store_id>`
 - **Taxonomy is per-store.** Finds the target store's taxonomy or **creates one**
@@ -234,12 +236,17 @@ The bolded rows are the reason a same-org copy needs `--suffix` (§5).
 
 ## 5. Same-org copy vs. cross-org migration
 
-The same pipeline does both. **Same-org** (source org == target org) differs in two
-ways, which the orchestrator sets automatically:
+The same pipeline does both. **Same-org** (source org == target org) differs in three
+ways, which the orchestrator sets automatically — the goal being a copy you can
+**restyle and edit independently** of the live store:
 
 - **`--no-default`** (on `deploy-store.py`): the copy must not seize the org's
   primary-store flag — that store serves the root domain. The live store stays
   primary; the copy gets its own auto-provisioned `*.storeconnect.app` domain.
+- **`--theme-suffix=<s>`** (on `deploy-store.py`): the theme is matched by Name, so a
+  same-org copy would otherwise *share* the source theme. The suffix appends to the
+  theme Name so the copy gets its **own** theme — letting you change the theme / front
+  end without affecting the source store (the usual reason to clone in-org).
 - **`--suffix=<s>`** (on `deploy-store-content.py`): because **page `Slug` is org-wide
   unique** and **content blocks are org-wide (no store field)**, the copy can't reuse
   those keys without colliding with — and reusing — the source's content. The suffix
@@ -248,22 +255,23 @@ ways, which the orchestrator sets automatically:
 
 What is **reused** vs **created** in a same-org copy:
 
-| Reused (shared org-wide) | Created fresh (per-store) |
+| Reused (shared org-wide) | Created fresh (per-store / independent) |
 |---|---|
 | `Product2` (by ProductCode/Slug) | the store **record** |
-| `s_c__Media__c` (by Identifier) | `s_c__Taxonomy__c` + categories + hierarchy |
-| tier `Pricebook2` (by Name) | Pages / articles (suffixed Slug) |
-| `s_c__Theme__c` (by Name) | Content blocks / menus / items (suffixed Identifier) |
-| `s_c__Template__c` picklist values | |
+| `s_c__Media__c` (by Identifier) | `s_c__Theme__c` (suffixed Name, `--theme-suffix`) |
+| tier `Pricebook2` (by Name) | `s_c__Taxonomy__c` + categories + hierarchy |
+| `s_c__Template__c` picklist values | Pages / articles (suffixed Slug) |
+| | Content blocks / menus / items (suffixed Identifier) |
 
-> **Theme is reused, not duplicated, in a same-org copy.** `deploy-store.py` matches
-> the theme by **Name**, and a fresh backup captures the source theme's real name —
-> so the copy **shares** the source store's theme (verified: an in-org clone pointed
-> at the same `s_c__Theme__c` Id). Editing one store's theme then affects both. For an
-> independent theme, give the deployed theme a distinct name (rename the staged
-> `theme.md` title before Step 3). This is the same reuse-by-key behavior as products/
-> media/pricebooks — only content (via `--suffix`) and the per-store taxonomy are
-> forced independent.
+> **Theme is made independent in a same-org copy** — because the usual reason to
+> clone a store in-org is to **modify the theme / front end** without affecting the
+> live store. `deploy-store.py` matches the theme by **Name**, so without help a
+> same-org copy would *reuse* (share) the source theme. The orchestrator passes
+> **`--theme-suffix=<s>`** for same-org copies, which appends `<s>` to the theme Name
+> (e.g. `STO v1-rep`) so a **new** theme record is created. (A cross-org deploy into a
+> blank target already gets its own theme — no suffix needed there.) Products, media,
+> pricebooks, and template picklist values remain reused (shared) — see the
+> `--duplicate` future note in §5 of the README for forking those too.
 
 > **Possible future option — force-duplicate shared records.** Today a same-org copy
 > is a **shared-catalog** copy (products/media/pricebooks reused). A `--duplicate`

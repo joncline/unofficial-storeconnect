@@ -27,7 +27,8 @@ and POS.
 `scripts/replicate-store.py` runs every step in this runbook in order, prompting
 **up front** for source org + store, target org, and the new store name. It is
 **dry run by default** and writes nothing without `--execute` (and confirms each
-step). It auto-detects a same-org copy and adds `--no-default` + `--suffix`.
+step). It auto-detects a same-org copy and adds `--no-default`, `--suffix`, and
+`--theme-suffix` (independent primary-flag handling, content, and theme).
 
 ```bash
 python3 scripts/replicate-store.py            # interactive, dry run
@@ -213,9 +214,12 @@ echo "$TARGET_STORE_ID"
 - **Skips `GOOGLE_MAPS_API_KEY`** (org-specific credential — set per org later).
 - A brand-new store gets its own auto-provisioned domain; set
   `s_c__Unique_Domain_Path__c` later for a friendly path (Manual steps).
-- **Same-org store→store copy:** add **`--no-default`** so the new store does NOT
-  become the org's primary (which would hijack the existing default store):
-  `python3 scripts/deploy-store.py $TARGET_ORG $SOURCE_STORE_ID $TARGET_ORG --create-store --no-default`.
+- **Same-org store→store copy:** add **`--no-default`** (so the new store does NOT
+  become the org's primary / hijack the existing default) **and `--theme-suffix=<s>`**
+  (so the copy gets its **own** theme instead of sharing the source's — the theme is
+  matched by Name, and an in-org clone is usually for editing the theme / front end):
+  `python3 scripts/deploy-store.py $TARGET_ORG $SOURCE_STORE_ID $TARGET_ORG --create-store --no-default --theme-suffix=-copy`.
+  (The orchestrator sets both automatically; in Step 7 use the same value for `--suffix`.)
 
 ## 4. Categories + hierarchy + id-map  (`provision-categories.py`)
 

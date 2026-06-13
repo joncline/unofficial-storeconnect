@@ -16,8 +16,9 @@ Follow this; don't rediscover the design by reading every script.
    behavior + idempotency), then `docs/site-migration-runbook.md` (the order). Only
    open a specific script to *confirm* a detail the user questions.
 2. **Confirm intent before any write.** Identify source org + store and target org.
-   If source org == target org, it's a same-org copy → `--no-default` + `--suffix`
-   are needed (the orchestrator adds them). State what will be **created vs. reused**
+   If source org == target org, it's a same-org copy → `--no-default`, `--suffix`,
+   and `--theme-suffix` are needed (the orchestrator adds them). State what will be
+   **created vs. reused**
    (see §"Same-org copy vs cross-org" and `solution-design.md`).
 3. **Dry-run.** Run `python3 scripts/replicate-store.py` (or individual steps) with
    `--dry-run`/no `--execute`, and show the plan. **Never write to an org without the
@@ -127,19 +128,22 @@ See [`docs/content-block-and-catalog-model.md`](docs/content-block-and-catalog-m
 
 ## Same-org copy vs cross-org
 
-The same pipeline does both. **Same-org** (source org == target org) has two extra
-needs the orchestrator sets automatically:
+The same pipeline does both. **Same-org** (source org == target org) needs three
+extra flags the orchestrator sets automatically — the point of an in-org clone is to
+**restyle the theme / front end independently** of the live store:
 - **`--no-default`** on `deploy-store.py` — so the copy doesn't seize the org's primary
   store flag (which would steal the live store's domain routing).
+- **`--theme-suffix=<s>`** on `deploy-store.py` — the theme is matched by Name, so
+  without it the copy would *share* the source theme. The suffix gives the copy its
+  **own** theme so its theme/front end can be edited without affecting the source.
 - **`--suffix=<s>`** on `deploy-store-content.py` — because `s_c__Page__c.s_c__Slug__c`
   is org-wide unique and content blocks are org-wide, the copy needs unique
   slugs/identifiers to get **independent** pages/blocks/menus instead of colliding with
-  and reusing the source's. Org-wide records that are legitimately shared (products by
-  Slug, media by Identifier, pricebooks by Name, the **theme by Name**, template
-  picklist values) are reused, not duplicated — so a same-org copy **shares the
-  source's theme** (rename the staged `theme.md` title before Step 3 for an
-  independent one). Only the per-store taxonomy and `--suffix`ed content are forced
-  independent.
+  and reusing the source's.
+
+So a same-org copy gets an **independent theme, content, and taxonomy**. Truly shared
+org-wide records (products by Slug, media by Identifier, pricebooks by Name, template
+picklist values) are still reused, not duplicated.
 
 ## File map
 

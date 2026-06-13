@@ -17,9 +17,12 @@ each step idempotent and dry-runnable:
   8b. roles    provision-store-user-roles.py
 
 SAME-ORG COPY: when source org == target org the wizard automatically adds
-  --no-default  (don't hijack the org's existing primary store) and
-  --suffix=<s>  (page Slug is org-wide unique + content blocks are org-wide, so
-                the copy needs unique keys to get independent content).
+  --no-default     (don't hijack the org's existing primary store),
+  --suffix=<s>     (page Slug is org-wide unique + content blocks are org-wide, so
+                   the copy needs unique keys to get independent content), and
+  --theme-suffix=<s> on deploy-store (independent theme — the usual point of an
+                   in-org clone is to restyle the theme/front end without affecting
+                   the source store).
 
 --skip-backup reuses an already-captured source backup (skips step 1) — handy for
 fast re-runs and dry runs once the backup is staged.
@@ -243,6 +246,11 @@ def main():
         deploy.append(f'--name={new_name}')
     if no_default:
         deploy.append('--no-default')
+    # Same-org copy: give the theme its own name (suffix) so it's an INDEPENDENT
+    # theme — the usual reason to clone in-org is to restyle the theme/front end
+    # without touching the source store. (Cross-org gets its own theme anyway.)
+    if suffix:
+        deploy.append(f'--theme-suffix={suffix}')
     run("3/10  store record + theme", deploy + dr)
 
     # Resolve the new store Id (needed for categories). Only possible once created.

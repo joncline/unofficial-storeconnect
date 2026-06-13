@@ -19,6 +19,10 @@ Flags:
                      existing <dst_store_id>.
     --name="..."     override the new store's Name (default: the staged record's
                      Name). Use for a same-org copy so it's distinguishable.
+    --theme-suffix=<s>  append <s> to the deployed theme's Name so an INDEPENDENT
+                     theme is created instead of reusing the source's (theme is
+                     matched by Name). Required for a same-org copy you intend to
+                     restyle without affecting the source store.
     --no-default     do NOT set the deployed store as the org's Primary store
                      (default is to set it). Use for same-org store->store copies
                      so the existing primary keeps its domain routing.
@@ -197,6 +201,12 @@ def main():
     # of the same name (e.g. a same-org copy) so the two are distinguishable.
     name_override = next((a.split('=', 1)[1] for a in sys.argv[1:]
                           if a.startswith('--name=')), None)
+    # Optional --theme-suffix=<s> appends <s> to the deployed theme's Name. Theme is
+    # matched/reused by Name, so for a SAME-ORG copy the source theme name already
+    # exists and would be reused (shared) — a suffix forces an INDEPENDENT theme so
+    # the copy's theme/front end can be edited without affecting the source store.
+    theme_suffix = next((a.split('=', 1)[1] for a in sys.argv[1:]
+                         if a.startswith('--theme-suffix=')), '')
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
 
     # --create-store makes a brand-new store record (named from the staged archive)
@@ -267,7 +277,7 @@ def main():
     # ── Step 1: Create theme (idempotent) ────────────────────────────────────
     # Prefer the staged theme.md title (e.g. "STO v1") so the deployed theme
     # carries the intended brand name; fall back to the old "{store} ({dst})".
-    new_theme_name = theme_title(theme_dir) or f"{store_name} ({dst_name})"
+    new_theme_name = (theme_title(theme_dir) or f"{store_name} ({dst_name})") + theme_suffix
     print(f"Step 1: Create theme '{new_theme_name}'")
     existing_themes = sf_query(
         dst_org,

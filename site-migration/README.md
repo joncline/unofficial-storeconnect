@@ -6,6 +6,11 @@ design, and POS so the target renders the same storefront. Driven entirely by th
 Salesforce CLI (`sf`); every write step is an idempotent Python script that supports
 `--dry-run`.
 
+> **Same-org copies, too.** Source and target can be the **same org** — replicate a
+> store into a brand-new store alongside the original (a store→store fork in one org).
+> The wizard detects this and handles it automatically. See
+> [Same-org store → store copy](#same-org-store--store-copy).
+
 > Unofficial tooling — not affiliated with or supported by StoreConnect.
 
 ## What it migrates
@@ -153,30 +158,32 @@ SOURCE_STORE_ID=<source-store-Id>          # the store to copy from
 # or pass an existing target store Id to deploy-store.py
 ```
 
-The orchestrator detects a same-org copy automatically and adds the two flags it
-needs (`--no-default` + `--suffix`); the notes below explain what they do and why.
+The orchestrator detects a same-org copy automatically and adds the flags it needs
+(`--no-default`, `--suffix`, and `--theme-suffix`); the notes below explain why.
 
 Notes for same-org use:
 - **Primary store left alone (`--no-default`).** The copy must not hijack the org's
   existing primary store (which serves the root domain). The orchestrator sets this;
   manually: `deploy-store.py <org> <src_store_id> <org> --create-store --no-default`.
-- **Reuse-if-present, create-if-absent — the model in one line.** Every step is
-  idempotent: it matches an existing record by its natural key and **reuses it if
-  present, only creating it when absent.**
-  - **Shared org-wide records are reused:** `Product2` (by ProductCode/Slug),
-    `s_c__Media__c` (by Identifier), tier `Pricebook2` (by Name), the
-    `s_c__Theme__c` (by Name), and content-block **template picklist** values. The
-    copy just links these existing records into the new store — no duplicates.
-    *(Verified on an in-org clone: the new store shared the source's theme.)* Editing
-    a shared theme affects both stores; for an independent theme, rename the staged
-    `theme.md` title before the store step so it's created under a new name.
-  - **Per-store content is created fresh** via **`--suffix=<s>`** on
-    `deploy-store-content.py`: it appends `<s>` to each created page/article **Slug**
-    and content-block/menu/menu-item **Identifier**, so those keys are *absent* in the
-    target and get created as independent copies. This is required in-org because
-    `s_c__Page__c.s_c__Slug__c` is org-wide unique and content blocks are org-wide
-    (no store field) — without the suffix the new store would collide with, and reuse,
-    the source's content. (Categories are always per-store, so they're copied either way.)
+- **The theme + content are made independent, so you can restyle freely.** The usual
+  reason to clone a store in-org is to **modify the theme / front end** without
+  touching the live store — so the copy must own them:
+  - **Theme is duplicated** via **`--theme-suffix=<s>`** on `deploy-store.py`. The
+    theme is matched by Name, so without a suffix the copy would *share* the source's
+    theme (edits would hit both stores). The suffix gives the copy its **own** theme
+    (e.g. `STO v1-rep`). The orchestrator sets it automatically for a same-org copy.
+  - **Pages / articles / content blocks / menus are created fresh** via
+    **`--suffix=<s>`** on `deploy-store-content.py` (appended to each Slug /
+    Identifier). Required in-org because `s_c__Page__c.s_c__Slug__c` is org-wide unique
+    and content blocks are org-wide (no store field) — without the suffix the copy
+    would collide with, and reuse, the source's content. Categories are always
+    per-store, so the taxonomy is independent either way.
+- **Truly shared org-wide records are still reused** (reuse-if-present,
+  create-if-absent): `Product2` (by ProductCode/Slug), `s_c__Media__c` (by
+  Identifier), tier `Pricebook2` (by Name), and content-block **template picklist**
+  values. The copy links these existing records into its own taxonomy/menu/pages —
+  no duplicates. *(A `--duplicate` option to fork these too is a documented future
+  idea — see below.)*
 - **Reference (lookup) fields are still skipped** even though they'd resolve in-org
   (the scripts strip lookups for cross-org safety). Product media + the store logo
   are re-linked by the media/content steps; other org-specific lookups (e.g. product
