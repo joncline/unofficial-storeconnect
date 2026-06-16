@@ -22,6 +22,12 @@ the page↔block junctions and featured-products/categories associations that bu
 the homepage, the theme (templates + custom-template picklist values), the store
 logo, store variables, and a default POS (outlet + register).
 
+> **Preserve your existing URLs.** StoreConnect's **Route Mapping** lets you bring your
+> high-performing or well-known page URLs over seamlessly — old URLs keep resolving to
+> the right resource, preserving SEO and bookmarks. Mappings are also created
+> **automatically as resources move around** (e.g. when a slug changes), so links don't
+> break. Search "Route Mapping" on the support site for setup details.
+
 ## Working with an AI assistant
 
 This project is written to be driven by an AI coding assistant (e.g. Claude Code)

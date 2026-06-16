@@ -1,20 +1,26 @@
 # unofficial-storeconnect
 
 Community-built tools, templates, and patterns for [StoreConnect](https://storeconnect.com)
-stores. **Unofficial** — not affiliated with or supported by StoreConnect; shared as-is
-for other builders to learn from and adapt.
+stores — practical building blocks for other builders to learn from and adapt to their
+own orgs.
+
+> ⚠️ **Unofficial and provided "AS IS."** This is an independent, community-built project —
+> **not** affiliated with, endorsed, or supported by StoreConnect. Everything here is
+> shared **without warranty of any kind**; you assume all risk for evaluating, securing,
+> and operating it in your own org. See the [Disclaimer](#disclaimer) and
+> [`LICENSE`](LICENSE).
 
 ## Contents
 
+Each folder is a **self-contained project** with its own README, setup instructions, and
+(where useful) a `CLAUDE.md` agent brief — written to be adaptable to any StoreConnect
+org, including by an AI assistant working directly in your store.
+
 | Folder | What it is |
 |---|---|
-| [`simple-lms/`](simple-lms/) | A self-paced **learning management system** built from StoreConnect primitives — Articles as lessons, a custom progress object, theme templates for a paginated lesson player, sequential unlocking, hosted video, and self-scored Markdown quizzes. No app server, no Apex (Flows only). |
-| [`site-migration/`](site-migration/) | **Replicate a StoreConnect store from one org into another** (or copy a store within the same org) — catalog, hierarchical categories, products + PricebookEntries, media, pages/menus/content-blocks, the homepage junctions, theme, store logo, and POS. An interactive orchestrator (`replicate-store.py`) drives the ordered, idempotent, dry-runnable steps; everything goes through the `sf` CLI (no app server, no Apex). |
-| [`ai-content-agent/`](ai-content-agent/) | A safe, scoped path for letting an **AI agent edit StoreConnect content** — product copy, tags, traits/variants, POS layouts — via a dedicated **API-only user** on the free Salesforce Integration license, holding content-only permissions (no pricing, orders, or customers). Ships a custom permission set + an idempotent provisioning script; the agent authenticates as that user so the platform enforces the boundary. |
-
-Each folder is self-contained with its own README and setup instructions, and is
-written to be adaptable to any StoreConnect org (placeholders for org-specific IDs/URLs)
-— including by an AI assistant working directly in your store.
+| [`simple-lms/`](simple-lms/) | A self-paced learning management system built from StoreConnect primitives (Articles, a progress object, theme templates, Flows). |
+| [`site-migration/`](site-migration/) | Replicate a StoreConnect store from one org into another — or copy one within an org — catalog, content, theme, and POS, via the `sf` CLI. |
+| [`ai-content-agent/`](ai-content-agent/) | A safe, scoped **API-only user** pattern for letting an AI agent edit StoreConnect content without access to pricing, orders, or customers. |
 
 ## StoreConnect documentation
 
@@ -28,12 +34,6 @@ authoritative guidance. Useful starting points:
 - [Content block templates](https://support.storeconnect.com/article/content-block-templates),
   [Theme Assets](https://support.storeconnect.com/article/Theme-Assets)
 - [Find and resolve sync errors](https://support.storeconnect.com/articles/videos-tutorials/how-to-find-and-resolve-sync-errors)
-
-**Migrating an existing site?** StoreConnect's **Route Mapping** lets you bring your
-high-performing or well-known page URLs over to StoreConnect seamlessly — old URLs keep
-resolving to the right resource, preserving SEO and bookmarks. Mappings are also created
-**automatically as resources move around** (e.g. when a slug changes), so links don't
-break. Search "Route Mapping" on the support site for setup details.
 
 ## Found this useful?
 
