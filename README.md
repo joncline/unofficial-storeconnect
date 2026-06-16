@@ -10,6 +10,7 @@ for other builders to learn from and adapt.
 |---|---|
 | [`simple-lms/`](simple-lms/) | A self-paced **learning management system** built from StoreConnect primitives — Articles as lessons, a custom progress object, theme templates for a paginated lesson player, sequential unlocking, hosted video, and self-scored Markdown quizzes. No app server, no Apex (Flows only). |
 | [`site-migration/`](site-migration/) | **Replicate a StoreConnect store from one org into another** (or copy a store within the same org) — catalog, hierarchical categories, products + PricebookEntries, media, pages/menus/content-blocks, the homepage junctions, theme, store logo, and POS. An interactive orchestrator (`replicate-store.py`) drives the ordered, idempotent, dry-runnable steps; everything goes through the `sf` CLI (no app server, no Apex). |
+| [`ai-content-agent/`](ai-content-agent/) | A safe, scoped path for letting an **AI agent edit StoreConnect content** — product copy, tags, traits/variants, POS layouts — via a dedicated **API-only user** on the free Salesforce Integration license, holding content-only permissions (no pricing, orders, or customers). Ships a custom permission set + an idempotent provisioning script; the agent authenticates as that user so the platform enforces the boundary. |
 
 Each folder is self-contained with its own README and setup instructions, and is
 written to be adaptable to any StoreConnect org (placeholders for org-specific IDs/URLs)
